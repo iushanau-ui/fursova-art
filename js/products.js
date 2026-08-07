@@ -217,7 +217,7 @@ const PRODUCTS = [
    ============================================================ */
 const I18N = {
   en: {
-    docTitle: "Anna Ivanova — paintings, prints & objects",
+    docTitle: "Elizaveta Fursova — paintings, prints & objects",
     nav: { works: "Works", about: "About", how: "How to order", contacts: "Contact" },
     hero: {
       l1: "Art that",
@@ -260,7 +260,7 @@ const I18N = {
   },
 
   ru: {
-    docTitle: "Анна Иванова — картины, принты и авторские вещи",
+    docTitle: "Елизавета Фурсова — картины, принты и авторские вещи",
     nav: { works: "Работы", about: "О художнице", how: "Как заказать", contacts: "Контакты" },
     hero: {
       l1: "Искусство,",
@@ -303,7 +303,7 @@ const I18N = {
   },
 
   it: {
-    docTitle: "Anna Ivanova — quadri, stampe e oggetti d'autore",
+    docTitle: "Elizaveta Fursova — quadri, stampe e oggetti d'autore",
     nav: { works: "Opere", about: "L'artista", how: "Come ordinare", contacts: "Contatti" },
     hero: {
       l1: "L'arte che",
