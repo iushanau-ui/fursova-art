@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 500">
+  <rect width="400" height="500" fill="#efe8db"/>
+  <circle cx="200" cy="180" r="70" fill="#d8b79a"/>
+  <path d="M120 500 Q120 340 200 340 T280 500 Z" fill="#8a5a44"/>
+  <path d="M140 160 q0 -70 60 -70 t60 70 q0 40 -18 58 l-4 -50 q-38 18 -76 0 l-4 50 q-18 -18 -18 -58" fill="#4a3428"/>
+  <rect x="0" y="440" width="400" height="60" fill="#e3d9c8"/>
+  <text x="200" y="475" text-anchor="middle" font-family="Georgia, serif" font-size="16" fill="#6b675f">Здесь будет фото художницы</text>
+</svg>
