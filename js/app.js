@@ -139,17 +139,14 @@ function applyStatic() {
 
   /* компактная шапка, появляющаяся при прокрутке вверх */
   const miniNav = $(".mini-nav");
-  if (miniNav) {
-    miniNav.innerHTML = $(".site-nav").innerHTML;
-    $(".mini-name").textContent = L(CONFIG.artistName);
-  }
+  if (miniNav) miniNav.innerHTML = $(".site-nav").innerHTML;
 }
 
 /* ---------- Компактная шапка при скролле вверх ---------- */
 (function () {
   const mh = document.createElement("div");
   mh.className = "mini-head";
-  mh.innerHTML = `<a class="mini-name" href="index.html"></a><nav class="mini-nav site-nav"></nav>`;
+  mh.innerHTML = `<nav class="mini-nav site-nav"></nav>`;
   document.body.appendChild(mh);
 
   let lastY = 0;
