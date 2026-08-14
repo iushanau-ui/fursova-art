@@ -49,17 +49,36 @@ const catLabel = (id) => {
   return c ? L(c.label) : id;
 };
 
+const LANG_NAMES = { en: "English", ru: "Русский", it: "Italiano" };
+const CHEV = `<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>`;
+
 function renderSwitchers() {
+  const curObj = CONFIG.currencies.find((c) => c.code === cur);
   $$(".switchers").forEach((box) => {
     box.innerHTML = `
-      <div class="switch-group">
-        ${LANGS.map((l) => `<button class="switch ${l === lang ? "active" : ""}" data-lang="${l}">${l.toUpperCase()}</button>`).join("")}
+      <div class="dd">
+        <button class="dd-btn" type="button">${lang.toUpperCase()} ${CHEV}</button>
+        <div class="dd-list" hidden>
+          ${LANGS.map((l) => `<button class="dd-item ${l === lang ? "active" : ""}" data-lang="${l}">${LANG_NAMES[l]}</button>`).join("")}
+        </div>
       </div>
-      <div class="switch-group">
-        ${CONFIG.currencies.map((c) => `<button class="switch ${c.code === cur ? "active" : ""}" data-cur="${c.code}">${c.code}</button>`).join("")}
+      <div class="dd">
+        <button class="dd-btn" type="button">${curObj.code} ${curObj.symbol} ${CHEV}</button>
+        <div class="dd-list" hidden>
+          ${CONFIG.currencies.map((c) => `<button class="dd-item ${c.code === cur ? "active" : ""}" data-cur="${c.code}">${c.code} ${c.symbol}</button>`).join("")}
+        </div>
       </div>`;
   });
 }
+
+/* открытие/закрытие выпадающих списков */
+document.addEventListener("click", (e) => {
+  const btn = e.target.closest(".dd-btn");
+  $$(".dd-list").forEach((l) => {
+    if (btn && l.parentElement.contains(btn)) l.hidden = !l.hidden;
+    else l.hidden = true;
+  });
+});
 
 document.addEventListener("click", (e) => {
   const lBtn = e.target.closest("[data-lang]");
@@ -114,7 +133,32 @@ function applyStatic() {
   if (stepsList) stepsList.innerHTML = t("how.steps")
     .map((s, i) => `<li class="reveal" style="--d:${i * 0.12}s"><span>0${i + 1}</span><h3>${s.t}</h3><p>${s.p}</p></li>`)
     .join("");
+
+  const payList = $("#payList");
+  if (payList) payList.innerHTML = t("how.pay").map((p) => `<li>${p}</li>`).join("");
+
+  /* компактная шапка, появляющаяся при прокрутке вверх */
+  const miniNav = $(".mini-nav");
+  if (miniNav) {
+    miniNav.innerHTML = $(".site-nav").innerHTML;
+    $(".mini-name").textContent = L(CONFIG.artistName);
+  }
 }
+
+/* ---------- Компактная шапка при скролле вверх ---------- */
+(function () {
+  const mh = document.createElement("div");
+  mh.className = "mini-head";
+  mh.innerHTML = `<a class="mini-name" href="index.html"></a><nav class="mini-nav site-nav"></nav>`;
+  document.body.appendChild(mh);
+
+  let lastY = 0;
+  window.addEventListener("scroll", () => {
+    const y = window.scrollY;
+    mh.classList.toggle("show", y > 420 && y < lastY);
+    lastY = y;
+  }, { passive: true });
+})();
 
 /* ---------- Галерея ---------- */
 function renderGrid() {

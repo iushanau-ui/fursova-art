@@ -145,7 +145,8 @@ a { color: inherit; }
 .utilities {
   position: fixed;
   top: .9rem;
-  right: .9rem;
+  /* прижаты к краю контентной колонки (1200px), а не к краю экрана */
+  right: max(.9rem, calc((100vw - 1200px) / 2));
   z-index: 60;
   display: flex;
   align-items: center;
@@ -153,27 +154,57 @@ a { color: inherit; }
 }
 
 .switchers { display: flex; align-items: center; gap: .55rem; }
-.switch-group {
-  display: flex;
+
+/* выпадающие списки языка и валюты */
+.dd { position: relative; }
+.dd-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: .45rem;
+  padding: .55rem .85rem;
   border: 1px solid var(--line);
   border-radius: 2rem;
-  overflow: hidden;
   background: var(--surface);
   background: color-mix(in srgb, var(--surface) 82%, transparent);
   backdrop-filter: blur(8px);
-}
-.switch {
-  padding: .42rem .6rem;
-  border: none;
-  background: transparent;
-  font: 500 .66rem/1 var(--sans);
-  letter-spacing: .06em;
-  color: var(--ink-soft);
+  font: 500 .72rem/1 var(--sans);
+  letter-spacing: .08em;
+  color: var(--ink);
   cursor: pointer;
-  transition: all .25s;
+  transition: border-color .25s;
 }
-.switch:hover { color: var(--ink); }
-.switch.active { background: var(--ink); color: var(--bg); }
+.dd-btn:hover { border-color: var(--accent); }
+.dd-btn svg { opacity: .6; }
+
+.dd-list {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  min-width: 130px;
+  padding: .35rem;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--surface);
+  box-shadow: 0 16px 44px rgba(20, 25, 28, .18);
+  display: flex;
+  flex-direction: column;
+  z-index: 70;
+  animation: ddIn .18s var(--ease);
+}
+@keyframes ddIn { from { opacity: 0; transform: translateY(-4px); } }
+.dd-item {
+  padding: .55rem .8rem;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  font: 500 .78rem/1 var(--sans);
+  color: var(--ink-soft);
+  text-align: left;
+  cursor: pointer;
+  transition: all .2s;
+}
+.dd-item:hover { background: var(--bg-soft); color: var(--ink); }
+.dd-item.active { color: var(--accent); font-weight: 600; }
 
 .icon-btn {
   position: relative;
@@ -263,17 +294,51 @@ a { color: inherit; }
 .site-nav a.active { color: var(--ink); }
 .site-nav a.active::after { right: 0; }
 
+/* компактная шапка: появляется при прокрутке ВВЕРХ */
+.mini-head {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 55;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  padding: .8rem clamp(1rem, 3vw, 2rem);
+  background: color-mix(in srgb, var(--bg) 88%, transparent);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--line);
+  transform: translateY(-105%);
+  transition: transform .4s var(--ease);
+}
+.mini-head.show { transform: none; }
+.mini-name {
+  font-family: var(--serif);
+  font-size: 1.05rem;
+  font-weight: 500;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.mini-head .site-nav { margin-top: 0; flex-wrap: nowrap; }
+@media (max-width: 860px) {
+  .mini-name { display: none; }
+  .mini-head .site-nav { flex-wrap: wrap; }
+}
+
 /* ============================================================
    ФОТО-ШАПКА — во всю ширину экрана
    ============================================================ */
 .hero {
   margin-top: clamp(1.6rem, 3.5vw, 2.6rem);
 }
-.hero-photo { position: relative; }
+.hero-photo {
+  position: relative; /* фото — во всю ширину экрана, как на сайте-примере */
+}
 .hero-photo img {
   width: 100%;
   display: block;
-  max-height: 78vh;
+  max-height: 76vh;
   object-fit: cover;
 }
 
@@ -288,10 +353,11 @@ main { min-height: 52vh; }
 /* ============================================================
    СЕКЦИИ И ГИГАНТСКИЕ ЗАГОЛОВКИ
    ============================================================ */
+/* эталонная ширина под стандартный монитор */
 .section {
-  max-width: 1280px;
+  max-width: 1200px;
   margin: 0 auto;
-  padding: clamp(4rem, 9vw, 7rem) clamp(1.2rem, 4vw, 3rem);
+  padding: clamp(4rem, 9vw, 6.5rem) clamp(1.2rem, 4vw, 3rem);
 }
 
 .giant {
@@ -535,6 +601,47 @@ main { min-height: 52vh; }
   font-size: .76rem;
   color: var(--ink-soft);
 }
+.footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: .4rem 1.6rem;
+  margin-bottom: .9rem;
+}
+.footer-links a {
+  font-size: .72rem;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--ink-soft);
+  transition: color .25s;
+}
+.footer-links a:hover { color: var(--accent); }
+
+/* блок «Оплата и доставка» на странице заказа */
+.pay-block { margin-top: clamp(3rem, 6vw, 4.5rem); border-top: 1px solid var(--line); padding-top: 2rem; }
+.pay-title { font-family: var(--serif); font-size: clamp(1.4rem, 2.4vw, 1.9rem); font-weight: 440; margin-bottom: 1.2rem; }
+.pay-list { list-style: none; max-width: 46rem; }
+.pay-list li {
+  position: relative;
+  padding: .45rem 0 .45rem 1.6rem;
+  font-size: .93rem;
+  color: var(--ink-soft);
+}
+.pay-list li::before {
+  content: "✦";
+  position: absolute;
+  left: 0;
+  top: .5rem;
+  font-size: .7rem;
+  color: var(--accent);
+}
+
+/* страница политики конфиденциальности */
+.policy { max-width: 46rem; }
+.policy .giant { margin-bottom: 2rem; }
+.policy h3 { font-size: 1.4rem; font-weight: 460; margin: 2.2rem 0 .8rem; }
+.policy p { color: var(--ink-soft); font-size: .95rem; margin-bottom: .9rem; }
 
 /* ============================================================
    МОДАЛЬНОЕ ОКНО РАБОТЫ
