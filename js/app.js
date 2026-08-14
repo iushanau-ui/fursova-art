@@ -1,6 +1,7 @@
 /* ============================================================
-   ЛОГИКА САЙТА: темы, языки, валюты, галерея, корзина,
-   курсор, параллакс. Контент редактируется в js/products.js.
+   ЛОГИКА САЙТА: темы, языки, валюты, галерея, корзина.
+   Контент редактируется в js/products.js — этот файл трогать
+   не нужно.
    ============================================================ */
 
 /* Без этого класса CSS не прячет контент — страховка от пустой страницы */
@@ -16,7 +17,7 @@ applyTheme();
 
 function applyTheme() {
   document.documentElement.dataset.theme = theme;
-  document.dispatchEvent(new CustomEvent("themechange")); // шейдер перечитает цвета
+  document.dispatchEvent(new CustomEvent("themechange")); // шейдеры перечитают цвета
 }
 
 $("#themeBtn").onclick = () => {
@@ -36,9 +37,10 @@ if (!CONFIG.currencies.some((c) => c.code === cur)) cur = CONFIG.currencies[0].c
 const t = (path) => path.split(".").reduce((o, k) => (o || {})[k], I18N[lang]) ?? path;
 const L = (obj) => (typeof obj === "object" ? obj[lang] ?? obj.en : obj);
 
-function fmt(priceEUR) {
+/* Цена хранится в долларах, пересчитывается по курсам из CONFIG */
+function fmt(priceUSD) {
   const c = CONFIG.currencies.find((x) => x.code === cur);
-  const v = Math.round(priceEUR * c.rate).toLocaleString("en-US").replace(/,/g, " ");
+  const v = Math.round(priceUSD * c.rate).toLocaleString("en-US").replace(/,/g, " ");
   return c.before ? `${c.symbol}${v}` : `${v} ${c.symbol}`;
 }
 
@@ -80,13 +82,14 @@ function applyStatic() {
   document.title = t("docTitle");
 
   $$("[data-i18n]").forEach((el) => (el.textContent = t(el.dataset.i18n)));
-  $$("[data-i18n-html]").forEach((el) => (el.innerHTML = t(el.dataset.i18nHtml)));
   $$("[data-i18n-ph]").forEach((el) => (el.placeholder = t(el.dataset.i18nPh)));
 
   $$("[data-artist-name]").forEach((el) => (el.textContent = L(CONFIG.artistName)));
-  $$("[data-tagline]").forEach((el) => (el.textContent = L(CONFIG.tagline)));
-  $$("[data-about]").forEach((el) => (el.textContent = L(CONFIG.about)));
   $$("[data-city]").forEach((el) => (el.textContent = L(CONFIG.city)));
+  $$("[data-about-greeting]").forEach((el) => (el.textContent = L(CONFIG.aboutGreeting)));
+  $$("[data-about]").forEach((el) => {
+    el.innerHTML = L(CONFIG.about).map((p) => `<p>${p}</p>`).join("");
+  });
 
   $("#worksCount").textContent = `(${PRODUCTS.length})`;
 
@@ -101,6 +104,12 @@ function applyStatic() {
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="4.5" width="19" height="15" rx="2.5"/><path d="m3.5 6.5 8.5 6.7 8.5-6.7"/></svg>
     </a>`;
 
+  const emailLink = $("#emailLink");
+  if (emailLink) {
+    emailLink.href = `mailto:${CONFIG.email}`;
+    emailLink.textContent = CONFIG.email;
+  }
+
   $("#stepsList").innerHTML = t("how.steps")
     .map((s, i) => `<li class="reveal" style="--d:${i * 0.12}s"><span>0${i + 1}</span><h3>${s.t}</h3><p>${s.p}</p></li>`)
     .join("");
@@ -109,35 +118,15 @@ function applyStatic() {
   $("#marqueeTrack").innerHTML = `<span>${phrase.repeat(3)}</span><span>${phrase.repeat(3)}</span>`;
 }
 
-/* ---------- Фильтры ---------- */
-let activeCat = "all";
-
-function renderFilters() {
-  const box = $("#filters");
-  box.innerHTML = "";
-  CATEGORIES.forEach((c) => {
-    const btn = document.createElement("button");
-    btn.className = "filter" + (c.id === activeCat ? " active" : "");
-    btn.textContent = L(c.label);
-    btn.onclick = () => {
-      activeCat = c.id;
-      renderFilters();
-      renderGrid();
-    };
-    box.appendChild(btn);
-  });
-}
-
 /* ---------- Галерея ---------- */
 function renderGrid() {
   const grid = $("#grid");
-  const items = PRODUCTS.filter((p) => activeCat === "all" || p.category === activeCat);
-  let html = items
+  let html = PRODUCTS
     .map(
       (p, i) => `
     <article class="card ${carouselMode ? "" : "reveal"}" style="--d:${(i % 3) * 0.1}s" data-id="${p.id}" tabindex="0" role="button" aria-label="${L(p.title)}">
       <div class="card-img">
-        ${p.sold ? `<span class="card-badge">${t("card.sold")}</span>` : p.unique ? `<span class="card-badge unique">${t("card.unique")}</span>` : ""}
+        ${p.sold ? `<span class="card-badge">${t("card.sold")}</span>` : ""}
         <img src="${p.image}" alt="${L(p.title)}" loading="lazy">
       </div>
       <div class="card-row">
@@ -145,12 +134,12 @@ function renderGrid() {
         <h3 class="card-title">${L(p.title)}</h3>
       </div>
       <p class="card-meta">${L(p.materials)} · ${p.size}</p>
-      <p class="card-price ${p.sold ? "sold" : ""}">${p.sold ? t("card.soldPrice") : fmt(p.priceEUR)}</p>
+      <p class="card-price ${p.sold ? "sold" : ""}">${p.sold ? t("card.soldPrice") : fmt(p.price)}</p>
     </article>`
     )
     .join("");
 
-  /* бесконечная лента: три копии подряд, старт с середины */
+  /* бесконечная лента (режим карусели): три копии подряд, старт с середины */
   if (carouselMode) html = html + html + html;
   grid.innerHTML = html;
   if (carouselMode) {
@@ -183,14 +172,13 @@ function renderGrid() {
   observeReveals();
 }
 
-/* ---------- Магнитная карусель (третья версия сайта) ---------- */
+/* ---------- Магнитная карусель (запасной режим галереи) ---------- */
 const carouselMode = document.body.classList.contains("carousel-mode");
 
 function initCarousel() {
   if (!carouselMode) return;
   const grid = $("#grid");
 
-  /* стрелки навигации — создаются один раз */
   if (!document.querySelector(".car-nav")) {
     const nav = document.createElement("div");
     nav.className = "car-nav";
@@ -211,22 +199,21 @@ function initCarousel() {
     });
   }
 
-  /* перетаскивание мышью с инерцией (на тач-экранах работает нативный скролл) */
   if (grid.dataset.carInit) return;
   grid.dataset.carInit = "1";
 
-  /* бесконечный цикл: у краёв незаметно перепрыгиваем в среднюю копию */
   grid.addEventListener("scroll", () => {
     const w = grid.scrollWidth / 3;
     if (w <= grid.clientWidth) return;
     if (grid.scrollLeft < w * 0.5) grid.scrollLeft += w;
     else if (grid.scrollLeft > w * 1.5) grid.scrollLeft -= w;
   }, { passive: true });
+
   let down = false, moved = 0, sx = 0, ss = 0, vel = 0, lx = 0, lt = 0, raf;
 
   grid.addEventListener("pointerdown", (e) => {
     if (e.pointerType !== "mouse") return;
-    e.preventDefault(); // иначе браузер начнёт нативный drag картинки
+    e.preventDefault();
     grid.setPointerCapture(e.pointerId);
     down = true;
     moved = 0;
@@ -237,7 +224,6 @@ function initCarousel() {
     cancelAnimationFrame(raf);
   });
   grid.addEventListener("dragstart", (e) => e.preventDefault());
-  /* колесо мыши листает ленту горизонтально */
   grid.addEventListener("wheel", (e) => {
     if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
       e.preventDefault();
@@ -255,7 +241,6 @@ function initCarousel() {
     lx = e.clientX;
     lt = now;
   });
-  /* после перетаскивания случайный клик не должен открывать работу */
   grid.addEventListener("click", (e) => {
     if (moved > 4) {
       e.stopPropagation();
@@ -293,7 +278,7 @@ const revealObserver = new IntersectionObserver(
 function observeReveals() {
   $$(".reveal:not(.in)").forEach((el) => revealObserver.observe(el));
 }
-/* если что-то пошло не так — через 2.5 с показываем всё, что на экране */
+/* если что-то пошло не так — показываем всё, что на экране */
 setInterval(() => {
   $$(".reveal:not(.in)").forEach((el) => {
     const r = el.getBoundingClientRect();
@@ -301,45 +286,7 @@ setInterval(() => {
   });
 }, 2500);
 
-/* ---------- Магнитная кнопка в хиро ---------- */
-(function () {
-  const btn = $(".hero-cta");
-  if (!btn || !matchMedia("(pointer: fine)").matches || reducedMotion) return;
-  const RADIUS = 170, PULL = 0.42;
-  let cx = 0, cy = 0, txm = 0, tym = 0;
-
-  document.addEventListener("mousemove", (e) => {
-    const r = btn.getBoundingClientRect();
-    const bx = r.left + r.width / 2 - cx;  // центр без текущего сдвига
-    const by = r.top + r.height / 2 - cy;
-    const dx = e.clientX - bx, dy = e.clientY - by;
-    const d = Math.hypot(dx, dy);
-    const k = d < RADIUS ? (1 - d / RADIUS) * PULL : 0;
-    txm = dx * k;
-    tym = dy * k;
-  }, { passive: true });
-
-  (function anim() {
-    cx += (txm - cx) * 0.14;
-    cy += (tym - cy) * 0.14;
-    btn.style.transform = `translate(${cx.toFixed(2)}px, ${cy.toFixed(2)}px)`;
-    requestAnimationFrame(anim);
-  })();
-})();
-
-/* ---------- Прячущаяся шапка ---------- */
-let lastY = 0;
-window.addEventListener(
-  "scroll",
-  () => {
-    const y = window.scrollY;
-    $(".header").classList.toggle("hidden", y > 160 && y > lastY);
-    lastY = y;
-  },
-  { passive: true }
-);
-
-/* ---------- Модальное окно товара ---------- */
+/* ---------- Модальное окно работы ---------- */
 const productModal = $("#productModal");
 let modalProduct = null;
 
@@ -351,11 +298,14 @@ function openProduct(id) {
   $("#mImg").alt = L(p.title);
   $("#mCat").textContent = catLabel(p.category);
   $("#mTitle").textContent = L(p.title);
-  $("#mMeta").textContent = `${L(p.materials)} · ${p.size} · ${p.year}`;
-  $("#mDesc").textContent = L(p.description);
-  $("#mPrice").textContent = p.sold ? t("modal.sold") : fmt(p.priceEUR);
+  $("#mMeta").textContent = `${L(p.materials)} · ${p.size}`;
+  const desc = p.description ? L(p.description) : "";
+  const dEl = $("#mDesc");
+  dEl.hidden = !desc;
+  dEl.textContent = desc;
+  $("#mPrice").textContent = p.sold ? t("modal.sold") : fmt(p.price);
   const uEl = $("#mUnique");
-  uEl.hidden = !p.unique;
+  uEl.hidden = !p.unique || p.sold;
   uEl.textContent = t("modal.unique");
   const addBtn = $("#mAdd");
   addBtn.hidden = p.sold;
@@ -425,10 +375,10 @@ function updateCartBadge() {
   badge.textContent = count;
 }
 
-function cartTotalEUR() {
+function cartTotalUSD() {
   return cart.reduce((s, it) => {
     const p = PRODUCTS.find((x) => x.id === it.id);
-    return s + (p ? p.priceEUR * it.qty : 0);
+    return s + (p ? p.price * it.qty : 0);
   }, 0);
 }
 
@@ -453,7 +403,7 @@ function renderCart() {
         <img src="${p.image}" alt="${L(p.title)}">
         <div>
           <div class="cart-item-title">${L(p.title)}</div>
-          <div class="cart-item-price">${fmt(p.priceEUR)}</div>
+          <div class="cart-item-price">${fmt(p.price)}</div>
           ${qtyBlock}
         </div>
         <button class="cart-item-remove" data-del="${p.id}" aria-label="×">×</button>
@@ -463,7 +413,7 @@ function renderCart() {
 
   empty.hidden = cart.length > 0;
   form.hidden = cart.length === 0;
-  $("#cartTotal").textContent = fmt(cartTotalEUR());
+  $("#cartTotal").textContent = fmt(cartTotalUSD());
 
   box.querySelectorAll("[data-inc]").forEach((b) => (b.onclick = () => changeQty(b.dataset.inc, 1)));
   box.querySelectorAll("[data-dec]").forEach((b) => (b.onclick = () => changeQty(b.dataset.dec, -1)));
@@ -505,14 +455,14 @@ cartDrawer.addEventListener("click", (e) => {
 function orderText() {
   const lines = cart.map((it) => {
     const p = PRODUCTS.find((x) => x.id === it.id);
-    return `• [${p.id}] ${L(p.title)} (${p.size}) — ${it.qty} ${t("order.pcs")} × ${fmt(p.priceEUR)}`;
+    return `• [${p.id}] ${L(p.title)} (${p.size}) — ${it.qty} ${t("order.pcs")} × ${fmt(p.price)}`;
   });
   return [
     t("order.greeting"),
     ``,
     ...lines,
     ``,
-    `${t("order.total")}: ${fmt(cartTotalEUR())}`,
+    `${t("order.total")}: ${fmt(cartTotalUSD())}`,
     ``,
     `${t("order.name")}: ${$("#fName").value.trim()}`,
     `${t("order.contact")}: ${$("#fContact").value.trim()}`,
@@ -555,15 +505,10 @@ function toast(msg) {
   toastTimer = setTimeout(() => (el.hidden = true), 2600);
 }
 
-/* ---------- Мобильное меню ---------- */
-$("#burger").onclick = () => $("#nav").classList.toggle("open");
-$$("#nav > a").forEach((a) => (a.onclick = () => $("#nav").classList.remove("open")));
-
 /* ---------- Полное обновление (язык/валюта) ---------- */
 function applyAll() {
   renderSwitchers();
   applyStatic();
-  renderFilters();
   renderGrid();
   initCarousel();
   if (!cartDrawer.hidden) renderCart();

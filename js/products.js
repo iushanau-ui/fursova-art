@@ -1,7 +1,7 @@
 /* ============================================================
    НАСТРОЙКИ САЙТА
    Тексты в трёх языках: en / ru / it.
-   Цены задаются ОДИН раз в евро (priceEUR) — доллары и рубли
+   Цены задаются ОДИН раз в долларах (price) — евро и рубли
    пересчитываются по курсам из блока currencies ниже.
    ============================================================ */
 const CONFIG = {
@@ -11,235 +11,127 @@ const CONFIG = {
     it: "Elizaveta Fursova",
   },
   tagline: {
-    en: "Painting · Works on paper · Prints",
-    ru: "Живопись · Графика · Принты",
-    it: "Pittura · Opere su carta · Stampe",
+    en: "Painting · Original art",
+    ru: "Живопись · Оригинальные работы",
+    it: "Pittura · Opere originali",
+  },
+  aboutGreeting: {
+    en: "Welcome to my world of art!",
+    ru: "Добро пожаловать в мой мир искусства!",
+    it: "Benvenuti nel mio mondo dell'arte!",
   },
   about: {
-    en: "I paint in oil and acrylic, inspired by the light of northern cities and the quiet life of everyday things. Every painting is one of a kind and signed by the artist. Prints are produced in limited, numbered editions on heavyweight archival paper.",
-    ru: "Я пишу маслом и акрилом, вдохновляясь светом северных городов и тихой жизнью вещей. Каждая картина — единственный экземпляр, подписана автором. Принты печатаются ограниченным нумерованным тиражом на плотной архивной бумаге.",
-    it: "Dipingo a olio e acrilico, ispirandomi alla luce delle città del nord e alla vita silenziosa delle cose. Ogni quadro è un pezzo unico, firmato dall'artista. Le stampe sono prodotte in edizioni limitate e numerate su carta d'archivio di alta grammatura.",
+    en: [
+      "My name is Elizaveta, and I am delighted to immerse you in my unique vision.",
+      "In my work, I explore the delicate boundary between the inner world of a human being and the elemental beauty that surrounds us. Through the azure glimmers of clear water, natural forms, the tenderness of flowers, and the fluid grace of the body, I create a space of absolute lightness and freedom. For me, the canvas becomes a portal not merely to self-discovery, but to returning to one's natural, primal state.",
+      "My art is about trust in oneself, the ability to feel the moment with every cell of your being, to melt away any fears and doubts, and to reclaim your inner strength through softness, flow, and oneness with the elements.",
+    ],
+    ru: [
+      "Меня зовут Елизавета, и я рада погрузить вас в моё уникальное видение.",
+      "В своих работах я исследую тонкую границу между внутренним миром человека и стихийной красотой, которая нас окружает. Через лазурные блики чистой воды, природные формы, нежность цветов и текучую грацию тела я создаю пространство абсолютной лёгкости и свободы. Холст для меня становится порталом не просто к самопознанию, а к возвращению в своё естественное, первозданное состояние.",
+      "Моё искусство — о доверии к себе, об умении чувствовать момент каждой клеточкой, растворять страхи и сомнения и возвращать внутреннюю силу через мягкость, поток и единение со стихией.",
+    ],
+    it: [
+      "Mi chiamo Elizaveta e sono felice di immergervi nella mia visione unica.",
+      "Nelle mie opere esploro il confine delicato tra il mondo interiore dell'essere umano e la bellezza elementare che ci circonda. Attraverso i riflessi azzurri dell'acqua limpida, le forme naturali, la tenerezza dei fiori e la grazia fluida del corpo, creo uno spazio di assoluta leggerezza e libertà. Per me la tela diventa un portale non solo verso la scoperta di sé, ma verso il ritorno al proprio stato naturale e primordiale.",
+      "La mia arte parla di fiducia in se stessi, della capacità di sentire il momento con ogni cellula del proprio essere, di dissolvere paure e dubbi e di ritrovare la propria forza interiore attraverso morbidezza, flusso e unione con gli elementi.",
+    ],
   },
   city: {
     en: "Minsk, Belarus",
     ru: "Минск, Беларусь",
     it: "Minsk, Bielorussia",
   },
-  email: "artist@example.com",   // TODO: почта для заказов (пока заглушка)
+  email: "elifejka@gmail.com",
   telegram: "elizafursova",      // арт-канал в Telegram
   instagram: "lisafursovaart",   // арт-страница в Instagram
 
-  /* Валюты. rate — курс к евро (1 EUR = rate единиц валюты).
+  /* Валюты. rate — сколько единиц валюты в 1 долларе.
      Обновляйте курсы время от времени вручную. */
   currencies: [
-    { code: "EUR", symbol: "€",  rate: 1,    before: true  },
-    { code: "USD", symbol: "$",  rate: 1.15, before: true  },
-    { code: "BYN", symbol: "Br", rate: 3.60, before: false },
+    { code: "USD", symbol: "$",  rate: 1,    before: true  },
+    { code: "EUR", symbol: "€",  rate: 0.90, before: true  },
+    { code: "BYN", symbol: "Br", rate: 3.30, before: false },
   ],
 };
 
 /* ============================================================
-   КАТЕГОРИИ
-   Новый раздел портфолио = одна строка здесь.
+   КАТЕГОРИИ (пока одна — живопись; принты добавим позже)
    ============================================================ */
 const CATEGORIES = [
-  { id: "all",      label: { en: "All works",  ru: "Все работы", it: "Tutte le opere" } },
-  { id: "painting", label: { en: "Paintings",  ru: "Картины",    it: "Quadri" } },
-  { id: "print",    label: { en: "Prints",     ru: "Принты",     it: "Stampe" } },
-  { id: "goods",    label: { en: "Objects",    ru: "Вещи",       it: "Oggetti" } },
+  { id: "painting", label: { en: "Painting", ru: "Живопись", it: "Pittura" } },
 ];
+
+/* Материалы — чтобы не повторять переводы в каждой работе */
+const MAT = {
+  oil:     { en: "Oil on canvas",                   ru: "Холст, масло",          it: "Olio su tela" },
+  acrylic: { en: "Acrylic on canvas",               ru: "Холст, акрил",          it: "Acrilico su tela" },
+  gold:    { en: "Acrylic on canvas, gold leaf",    ru: "Холст, акрил, поталь",  it: "Acrilico su tela, foglia d'oro" },
+};
 
 /* ============================================================
    КАТАЛОГ
-   unique: true  — работа в единственном экземпляре (картина):
-                   в корзину можно положить только 1 штуку.
-   sold: true    — продана (остаётся в галерее с пометкой).
-   priceEUR      — цена в евро, остальные валюты считаются сами.
+   Порядок в этом списке = порядок на сайте.
+   price — цена в долларах; sold: true — работа продана
+   (остаётся в архиве с плашкой, купить нельзя).
    ============================================================ */
 const PRODUCTS = [
-  {
-    id: "p01",
-    category: "painting",
-    unique: true,
-    priceEUR: 350,
-    size: "50 × 70 cm",
-    year: 2025,
-    image: "images/work-01.svg",
-    sold: false,
-    title:       { en: "Morning on the River", ru: "Утро на Немиге", it: "Mattina sul fiume" },
-    materials:   { en: "Oil on canvas", ru: "Холст, масло", it: "Olio su tela" },
-    description: {
-      en: "A city view in a warm morning palette. Stretched on a wooden frame, ready to hang.",
-      ru: "Городской пейзаж в тёплой утренней гамме. На деревянном подрамнике, готова к развеске.",
-      it: "Un paesaggio urbano in una calda tavolozza mattutina. Su telaio in legno, pronta da appendere.",
-    },
-  },
-  {
-    id: "p02",
-    category: "painting",
-    unique: true,
-    priceEUR: 480,
-    size: "60 × 80 cm",
-    year: 2025,
-    image: "images/work-02.svg",
-    sold: false,
-    title:       { en: "Still Water", ru: "Тихая вода", it: "Acqua calma" },
-    materials:   { en: "Acrylic on canvas", ru: "Холст, акрил", it: "Acrilico su tela" },
-    description: {
-      en: "An abstract composition about stillness. Deep layered blues and greens with textured brushwork.",
-      ru: "Абстрактная композиция о спокойствии. Глубокие сине-зелёные слои с фактурными мазками.",
-      it: "Una composizione astratta sulla quiete. Profondi strati di blu e verde con pennellate materiche.",
-    },
-  },
-  {
-    id: "p03",
-    category: "painting",
-    unique: true,
-    priceEUR: 320,
-    size: "40 × 60 cm",
-    year: 2024,
-    image: "images/work-03.svg",
-    sold: true,
-    title:       { en: "Noon", ru: "Полдень", it: "Mezzogiorno" },
-    materials:   { en: "Oil on canvas", ru: "Холст, масло", it: "Olio su tela" },
-    description: {
-      en: "A still life with fruit against the light. Warm glow, dense impasto painting.",
-      ru: "Натюрморт с фруктами в контражуре. Тёплый свет, плотная пастозная живопись.",
-      it: "Natura morta con frutta in controluce. Luce calda, pittura densa a impasto.",
-    },
-  },
-  {
-    id: "p04",
-    category: "painting",
-    unique: true,
-    priceEUR: 240,
-    size: "30 × 40 cm",
-    year: 2024,
-    image: "images/work-04.svg",
-    sold: false,
-    title:       { en: "Garden. Study II", ru: "Сад. Этюд II", it: "Giardino. Studio II" },
-    materials:   { en: "Oil on board", ru: "Картон, масло", it: "Olio su cartone" },
-    description: {
-      en: "A plein-air study painted in a single session. Loose, quick, alive brushwork.",
-      ru: "Пленэрный этюд, написанный за один сеанс. Живой, быстрый мазок.",
-      it: "Uno studio en plein air dipinto in un'unica sessione. Pennellata rapida e viva.",
-    },
-  },
-  {
-    id: "p05",
-    category: "print",
-    unique: false,
-    priceEUR: 45,
-    size: "30 × 40 cm",
-    year: 2025,
-    image: "images/work-05.svg",
-    sold: false,
-    title:       { en: "City Lines — print", ru: "Принт «Линии города»", it: "Linee della città — stampa" },
-    materials:   { en: "Giclée, 300 gsm archival paper", ru: "Жикле, архивная бумага 300 г/м²", it: "Giclée, carta d'archivio 300 g/m²" },
-    description: {
-      en: "Limited edition of 50, each print numbered and hand-signed. Archival pigment inks.",
-      ru: "Лимитированный тираж 50 экземпляров, каждый пронумерован и подписан вручную. Архивные пигментные чернила.",
-      it: "Edizione limitata di 50, ogni stampa numerata e firmata a mano. Inchiostri a pigmenti d'archivio.",
-    },
-  },
-  {
-    id: "p06",
-    category: "print",
-    unique: false,
-    priceEUR: 40,
-    size: "21 × 30 cm (A4)",
-    year: 2025,
-    image: "images/work-06.svg",
-    sold: false,
-    title:       { en: "The Wave — print", ru: "Принт «Волна»", it: "L'onda — stampa" },
-    materials:   { en: "Giclée, 300 gsm archival paper", ru: "Жикле, архивная бумага 300 г/м²", it: "Giclée, carta d'archivio 300 g/m²" },
-    description: {
-      en: "Edition of 100, numbered and signed. Pairs beautifully with «City Lines».",
-      ru: "Тираж 100 экземпляров, пронумерован и подписан. Отлично смотрится в паре с «Линиями города».",
-      it: "Edizione di 100, numerata e firmata. Sta benissimo accanto a «Linee della città».",
-    },
-  },
-  {
-    id: "p07",
-    category: "goods",
-    unique: false,
-    priceEUR: 18,
-    size: "10 × 15 cm",
-    year: 2025,
-    image: "images/work-07.svg",
-    sold: false,
-    title:       { en: "Postcard set of 6", ru: "Открытки, набор из 6 шт.", it: "Set di 6 cartoline" },
-    materials:   { en: "Designer cardstock", ru: "Дизайнерский картон", it: "Cartoncino di design" },
-    description: {
-      en: "Six postcards with reproductions of selected works, packed in a kraft envelope.",
-      ru: "Шесть открыток с репродукциями избранных работ. Упакованы в крафтовый конверт.",
-      it: "Sei cartoline con riproduzioni di opere selezionate, in una busta kraft.",
-    },
-  },
-  {
-    id: "p08",
-    category: "goods",
-    unique: false,
-    priceEUR: 30,
-    size: "38 × 42 cm",
-    year: 2025,
-    image: "images/work-08.svg",
-    sold: false,
-    title:       { en: "Tote bag «Noon»", ru: "Тоут-бэг «Полдень»", it: "Borsa tote «Mezzogiorno»" },
-    materials:   { en: "100% cotton, screen print", ru: "Хлопок 100%, шелкография", it: "100% cotone, serigrafia" },
-    description: {
-      en: "A heavy cotton tote with an original print. Holds up to 10 kg, washable at 30°.",
-      ru: "Плотная хлопковая сумка с авторским принтом. Выдерживает до 10 кг, можно стирать при 30°.",
-      it: "Una tote in cotone pesante con stampa originale. Regge fino a 10 kg, lavabile a 30°.",
-    },
-  },
-  {
-    id: "p09",
-    category: "goods",
-    unique: false,
-    priceEUR: 25,
-    size: "A5, 80 sheets",
-    year: 2025,
-    image: "images/work-09.svg",
-    sold: false,
-    title:       { en: "Sketchbook with artist cover", ru: "Скетчбук с авторской обложкой", it: "Sketchbook con copertina d'autore" },
-    materials:   { en: "120 gsm paper", ru: "Бумага 120 г/м²", it: "Carta 120 g/m²" },
-    description: {
-      en: "A spiral sketchbook with a reproduction cover. Paper suits graphite, ink and light watercolour.",
-      ru: "Скетчбук на пружине с обложкой-репродукцией. Бумага подходит для графики и лёгкой акварели.",
-      it: "Uno sketchbook a spirale con copertina-riproduzione. Carta adatta a grafite, inchiostro e acquerello leggero.",
-    },
-  },
+  { id: "p01", category: "painting", unique: true, price: 1100, size: "70 × 50 cm",  image: "images/works/01-natures-vitiligo.jpg",
+    title: { en: "Nature's Vitiligo", ru: "Nature's Vitiligo", it: "Nature's Vitiligo" }, materials: MAT.oil, sold: false },
+  { id: "p02", category: "painting", unique: true, price: 2000, size: "115 × 80 cm", image: "images/works/02-bond-of-lilies.jpg",
+    title: { en: "Bond of Lilies", ru: "Bond of Lilies", it: "Bond of Lilies" }, materials: MAT.oil, sold: false },
+  { id: "p03", category: "painting", unique: true, price: 1100, size: "60 × 50 cm",  image: "images/works/03-deep-breath.jpg",
+    title: { en: "Deep Breath", ru: "Deep Breath", it: "Deep Breath" }, materials: MAT.oil, sold: false },
+  { id: "p04", category: "painting", unique: true, price: 500,  size: "40 × 40 cm",  image: "images/works/04-aquamarine-dream.jpg",
+    title: { en: "Aquamarine Dream", ru: "Aquamarine Dream", it: "Aquamarine Dream" }, materials: MAT.oil, sold: false },
+  { id: "p05", category: "painting", unique: true, price: 500,  size: "40 × 40 cm",  image: "images/works/05-harmony.jpg",
+    title: { en: "Harmony", ru: "Harmony", it: "Harmony" }, materials: MAT.oil, sold: false },
+  { id: "p06", category: "painting", unique: true, price: 1500, size: "60 × 90 cm",  image: "images/works/06-aspiration.jpg",
+    title: { en: "Aspiration", ru: "Aspiration", it: "Aspiration" }, materials: MAT.acrylic, sold: false },
+  { id: "p07", category: "painting", unique: true, price: 400,  size: "30 × 24 cm",  image: "images/works/07-i-see-you.jpg",
+    title: { en: "I See You", ru: "I See You", it: "I See You" }, materials: MAT.acrylic, sold: false },
+  { id: "p08", category: "painting", unique: true, price: 500,  size: "40 × 30 cm",  image: "images/works/08-in-the-embrace-of-poppies.jpg",
+    title: { en: "In the Embrace of Poppies", ru: "In the Embrace of Poppies", it: "In the Embrace of Poppies" }, materials: MAT.oil, sold: false },
+  { id: "p09", category: "painting", unique: true, price: 1500, size: "90 × 60 cm",  image: "images/works/09-rebirth.jpg",
+    title: { en: "Rebirth", ru: "Rebirth", it: "Rebirth" }, materials: MAT.gold, sold: false },
+  { id: "p10", category: "painting", unique: true, price: 1500, size: "80 × 60 cm",  image: "images/works/10-contemplation.jpg",
+    title: { en: "Contemplation", ru: "Contemplation", it: "Contemplation" }, materials: MAT.oil, sold: false },
+  { id: "p11", category: "painting", unique: true, price: 1500, size: "70 × 60 cm",  image: "images/works/11-spark.jpg",
+    title: { en: "Spark", ru: "Spark", it: "Spark" }, materials: MAT.oil, sold: false },
+  { id: "p12", category: "painting", unique: true, price: 500,  size: "40 × 30 cm",  image: "images/works/12-sweet-pearl.jpg",
+    title: { en: "Sweet Pearl", ru: "Sweet Pearl", it: "Sweet Pearl" }, materials: MAT.acrylic, sold: false },
+
+  /* ---------- Проданные работы (архив) ---------- */
+  { id: "p13", category: "painting", unique: true, price: 0, size: "80 × 60 cm", image: "images/works/13-immersion.jpg",
+    title: { en: "Immersion", ru: "Immersion", it: "Immersion" }, materials: MAT.oil, sold: true },
+  { id: "p14", category: "painting", unique: true, price: 0, size: "70 × 70 cm", image: "images/works/14-rhythm-of-the-sky.jpg",
+    title: { en: "Rhythm of the Sky", ru: "Rhythm of the Sky", it: "Rhythm of the Sky" }, materials: MAT.acrylic, sold: true },
+  { id: "p15", category: "painting", unique: true, price: 0, size: "30 × 20 cm", image: "images/works/15-cranes.jpg",
+    title: { en: "Cranes", ru: "Cranes", it: "Cranes" }, materials: MAT.acrylic, sold: true },
+  { id: "p16", category: "painting", unique: true, price: 0, size: "50 × 70 cm", image: "images/works/16-northern-lights.jpg",
+    title: { en: "Northern Lights", ru: "Northern Lights", it: "Northern Lights" }, materials: MAT.acrylic, sold: true },
 ];
 
 /* ============================================================
-   ИНТЕРФЕЙСНЫЕ ТЕКСТЫ (кнопки, подписи, шаги, корзина)
+   ИНТЕРФЕЙСНЫЕ ТЕКСТЫ (меню, кнопки, подписи, корзина)
    ============================================================ */
 const I18N = {
   en: {
-    docTitle: "Elizaveta Fursova — paintings, prints & objects",
-    nav: { works: "Works", about: "About", how: "How to order", contacts: "Contact" },
-    hero: {
-      l1: "Art that",
-      l2: "lives <em>beside</em>",
-      l3: "you",
-      sub: "Original paintings, limited edition prints and artist-made objects. Every piece is signed by the artist.",
-      cta: "View works",
-      view: "View",
-      scroll: "Scroll",
-    },
-    marquee: "Original paintings — one of a kind · Limited edition prints, numbered & signed · Worldwide shipping · ",
-    works: { title: "Works" },
-    about: { title: "About the artist", based: "Based in" },
+    docTitle: "Elizaveta Fursova — original paintings",
+    nav: { home: "Home", buy: "Buy art", prints: "Prints", about: "About", how: "How to order", contacts: "Contacts" },
+    marquee: "Original paintings — one of a kind · Signed by the artist · Worldwide shipping · ",
+    works: { title: "Buy art" },
+    prints: { title: "Prints", soon: "Prints are coming soon — stay tuned." },
+    about: { title: "About", based: "Based in" },
     how: {
       title: "How to order",
       steps: [
-        { t: "Choose a piece", p: "Add paintings, prints or objects to your cart — or write to me directly if you have questions." },
+        { t: "Choose a piece", p: "Add paintings to your cart — or write to me directly if you have questions." },
         { t: "Place the order", p: "Fill in a short form in the cart — the order goes straight to the artist via Telegram or e-mail." },
-        { t: "Payment & delivery", p: "I will get back to you within a day to arrange payment and shipping — across Belarus and worldwide." },
+        { t: "Payment & delivery", p: "I will get back to you within a day to arrange payment and shipping — worldwide." },
       ],
     },
-    contacts: { title: "Contact", lead: "For purchases, commissions and collaborations:" },
+    contacts: { title: "Contacts", lead: "For commissions, collaborations or general inquiries, please get in touch." },
     footer: "All images are protected by copyright.",
     card: { sold: "Sold", soldPrice: "In a private collection", unique: "1 of 1" },
     modal: { add: "Add to cart", sold: "Sold", unique: "Unique work — exists in a single copy" },
@@ -260,29 +152,21 @@ const I18N = {
   },
 
   ru: {
-    docTitle: "Елизавета Фурсова — картины, принты и авторские вещи",
-    nav: { works: "Работы", about: "О художнице", how: "Как заказать", contacts: "Контакты" },
-    hero: {
-      l1: "Искусство,",
-      l2: "которое <em>живёт</em>",
-      l3: "рядом",
-      sub: "Оригинальные картины, лимитированные принты и авторские вещи. Каждая работа подписана художницей.",
-      cta: "Смотреть работы",
-      view: "Смотреть",
-      scroll: "Листайте",
-    },
-    marquee: "Оригинальные картины — в единственном экземпляре · Лимитированные принты с номером и подписью · Доставка по всему миру · ",
-    works: { title: "Работы" },
-    about: { title: "О художнице", based: "Живу и работаю —" },
+    docTitle: "Елизавета Фурсова — оригинальная живопись",
+    nav: { home: "Главная", buy: "Купить картину", prints: "Принты", about: "Обо мне", how: "Как заказать", contacts: "Контакты" },
+    marquee: "Оригинальные картины — в единственном экземпляре · С подписью художницы · Доставка по всему миру · ",
+    works: { title: "Купить картину" },
+    prints: { title: "Принты", soon: "Принты скоро появятся — следите за обновлениями." },
+    about: { title: "Обо мне", based: "Живу и работаю —" },
     how: {
       title: "Как заказать",
       steps: [
-        { t: "Выберите работу", p: "Добавьте картины, принты или вещи в корзину — или напишите напрямую, если есть вопросы." },
+        { t: "Выберите работу", p: "Добавьте картины в корзину — или напишите напрямую, если есть вопросы." },
         { t: "Оформите заказ", p: "Заполните короткую форму в корзине — заказ придёт художнице в Telegram или на почту." },
-        { t: "Оплата и доставка", p: "Я свяжусь с вами в течение дня, обсудим оплату и удобный способ доставки — по Беларуси и миру." },
+        { t: "Оплата и доставка", p: "Я свяжусь с вами в течение дня, обсудим оплату и удобный способ доставки — по всему миру." },
       ],
     },
-    contacts: { title: "Контакты", lead: "По вопросам покупки, заказных работ и сотрудничества:" },
+    contacts: { title: "Контакты", lead: "По вопросам заказных работ, сотрудничества и любым другим — напишите мне." },
     footer: "Все изображения защищены авторским правом.",
     card: { sold: "Продано", soldPrice: "В частной коллекции", unique: "1 из 1" },
     modal: { add: "В корзину", sold: "Продано", unique: "Уникальная работа — существует в единственном экземпляре" },
@@ -303,29 +187,21 @@ const I18N = {
   },
 
   it: {
-    docTitle: "Elizaveta Fursova — quadri, stampe e oggetti d'autore",
-    nav: { works: "Opere", about: "L'artista", how: "Come ordinare", contacts: "Contatti" },
-    hero: {
-      l1: "L'arte che",
-      l2: "vive <em>accanto</em>",
-      l3: "a te",
-      sub: "Quadri originali, stampe in edizione limitata e oggetti d'autore. Ogni opera è firmata dall'artista.",
-      cta: "Guarda le opere",
-      view: "Vedi",
-      scroll: "Scorri",
-    },
-    marquee: "Quadri originali — pezzi unici · Stampe in edizione limitata, numerate e firmate · Spedizione in tutto il mondo · ",
-    works: { title: "Opere" },
-    about: { title: "L'artista", based: "Vivo e lavoro a" },
+    docTitle: "Elizaveta Fursova — dipinti originali",
+    nav: { home: "Home", buy: "Acquista arte", prints: "Stampe", about: "Chi sono", how: "Come ordinare", contacts: "Contatti" },
+    marquee: "Quadri originali — pezzi unici · Firmati dall'artista · Spedizione in tutto il mondo · ",
+    works: { title: "Acquista arte" },
+    prints: { title: "Stampe", soon: "Le stampe arriveranno presto — restate sintonizzati." },
+    about: { title: "Chi sono", based: "Vivo e lavoro a" },
     how: {
       title: "Come ordinare",
       steps: [
-        { t: "Scegli un'opera", p: "Aggiungi quadri, stampe o oggetti al carrello — oppure scrivimi direttamente se hai domande." },
+        { t: "Scegli un'opera", p: "Aggiungi i quadri al carrello — oppure scrivimi direttamente se hai domande." },
         { t: "Invia l'ordine", p: "Compila un breve modulo nel carrello — l'ordine arriva all'artista via Telegram o e-mail." },
         { t: "Pagamento e consegna", p: "Ti risponderò entro un giorno per concordare pagamento e spedizione — in tutto il mondo." },
       ],
     },
-    contacts: { title: "Contatti", lead: "Per acquisti, opere su commissione e collaborazioni:" },
+    contacts: { title: "Contatti", lead: "Per commissioni, collaborazioni o altre richieste, non esitate a contattarmi." },
     footer: "Tutte le immagini sono protette da copyright.",
     card: { sold: "Venduto", soldPrice: "In collezione privata", unique: "1 di 1" },
     modal: { add: "Aggiungi al carrello", sold: "Venduto", unique: "Opera unica — esiste in un solo esemplare" },

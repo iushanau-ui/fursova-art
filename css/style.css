@@ -59,6 +59,16 @@ h1, h2, h3 { font-family: var(--serif); font-weight: 420; line-height: 1.05; }
 
 a { color: inherit; }
 
+/* фон-шейдер на весь сайт, под контентом */
+#bgShader {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  display: block;
+}
+
 /* Зерно бумаги */
 .grain {
   position: fixed;
@@ -80,8 +90,7 @@ a { color: inherit; }
 }
 
 /* ============================================================
-   ПОЯВЛЕНИЕ ПРИ СКРОЛЛЕ (только когда работает JS —
-   без JS весь контент виден сразу)
+   ПОЯВЛЕНИЕ ПРИ СКРОЛЛЕ (только когда работает JS)
    ============================================================ */
 .js .reveal {
   opacity: 0;
@@ -91,17 +100,8 @@ a { color: inherit; }
 }
 .js .reveal.in { opacity: 1; transform: none; }
 
-.js .line-in {
-  display: inline-block;
-  transform: translateY(115%);
-  animation: rise 1s var(--ease) forwards;
-}
-.line:nth-child(2) .line-in { animation-delay: .1s; }
-.line:nth-child(3) .line-in { animation-delay: .2s; }
-@keyframes rise { to { transform: none; } }
-
 @media (prefers-reduced-motion: reduce) {
-  .js .reveal, .js .line-in { opacity: 1; transform: none; animation: none; transition: none; }
+  .js .reveal { opacity: 1; transform: none; transition: none; }
   .marquee-track, .grain { animation: none !important; }
 }
 
@@ -140,67 +140,30 @@ a { color: inherit; }
 .btn-wide { width: 100%; text-align: center; }
 
 /* ============================================================
-   ШАПКА
+   СЛУЖЕБНЫЕ КНОПКИ (фикс. правый верхний угол)
    ============================================================ */
-.header {
+.utilities {
   position: fixed;
-  top: 0; left: 0; right: 0;
-  z-index: 50;
+  top: .9rem;
+  right: .9rem;
+  z-index: 60;
   display: flex;
   align-items: center;
-  gap: 1.4rem;
-  padding: 1rem clamp(1.2rem, 4vw, 3rem);
-  background: var(--bg);
-  background: color-mix(in srgb, var(--bg) 82%, transparent);
-  backdrop-filter: blur(14px);
-  border-bottom: 1px solid var(--line);
-  transition: transform .45s var(--ease), background .5s ease;
-}
-.header.hidden { transform: translateY(-100%); }
-
-.logo {
-  font-family: var(--serif);
-  font-size: 1.4rem;
-  font-weight: 560;
-  font-style: italic;
-  letter-spacing: .01em;
-  text-decoration: none;
-  margin-right: auto;
-  white-space: nowrap;
+  gap: .55rem;
 }
 
-.nav { display: flex; gap: 1.7rem; }
-.nav a {
-  position: relative;
-  font-size: .74rem;
-  letter-spacing: .12em;
-  text-transform: uppercase;
-  text-decoration: none;
-  color: var(--ink-soft);
-  transition: color .25s;
-}
-.nav a::after {
-  content: "";
-  position: absolute;
-  left: 0; right: 100%;
-  bottom: -5px;
-  height: 1px;
-  background: var(--accent);
-  transition: right .35s var(--ease);
-}
-.nav a:hover { color: var(--ink); }
-.nav a:hover::after { right: 0; }
-
-/* Переключатели языка и валюты */
-.switchers { display: flex; align-items: center; gap: .7rem; }
+.switchers { display: flex; align-items: center; gap: .55rem; }
 .switch-group {
   display: flex;
   border: 1px solid var(--line);
   border-radius: 2rem;
   overflow: hidden;
+  background: var(--surface);
+  background: color-mix(in srgb, var(--surface) 82%, transparent);
+  backdrop-filter: blur(8px);
 }
 .switch {
-  padding: .4rem .6rem;
+  padding: .42rem .6rem;
   border: none;
   background: transparent;
   font: 500 .66rem/1 var(--sans);
@@ -211,7 +174,6 @@ a { color: inherit; }
 }
 .switch:hover { color: var(--ink); }
 .switch.active { background: var(--ink); color: var(--bg); }
-.switchers-mobile { display: none; }
 
 .icon-btn {
   position: relative;
@@ -231,7 +193,6 @@ a { color: inherit; }
 }
 .icon-btn:hover { border-color: var(--accent); transform: scale(1.07); }
 
-/* иконки темы: в светлой показываем луну, в тёмной — солнце */
 .icon-sun { display: none; }
 [data-theme="dark"] .icon-sun { display: block; }
 [data-theme="dark"] .icon-moon { display: none; }
@@ -252,40 +213,71 @@ a { color: inherit; }
   text-align: center;
 }
 
-.burger { display: none; }
+/* ============================================================
+   ШАПКА: имя по центру + меню строкой
+   ============================================================ */
+.site-head {
+  text-align: center;
+  padding: clamp(3.2rem, 7vw, 4.8rem) 1.2rem 0;
+}
+
+.site-name {
+  display: inline-block;
+  font-family: var(--serif);
+  font-size: clamp(1.9rem, 5.2vw, 3.4rem);
+  font-weight: 420;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  text-decoration: none;
+  line-height: 1.1;
+}
+
+.site-nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: .4rem 1.9rem;
+  margin-top: 1.4rem;
+}
+.site-nav a {
+  position: relative;
+  font-size: .74rem;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--ink-soft);
+  padding: .3rem 0;
+  transition: color .25s;
+}
+.site-nav a::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 100%;
+  bottom: 0;
+  height: 1px;
+  background: var(--accent);
+  transition: right .35s var(--ease);
+}
+.site-nav a:hover { color: var(--ink); }
+.site-nav a:hover::after { right: 0; }
 
 /* ============================================================
-   ГЕРОЙ — живой шейдер-фон, чистая центрированная типографика
+   ФОТО-ШАПКА
    ============================================================ */
 .hero {
+  padding: clamp(1.8rem, 4vw, 3rem) clamp(1.2rem, 4vw, 3rem) 0;
+}
+
+.hero-photo {
   position: relative;
-  min-height: 100vh;
-  min-height: 100svh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 6.5rem clamp(1.2rem, 4vw, 3rem) 5rem;
+  max-width: 1280px;
+  margin: 0 auto;
   overflow: hidden;
+  box-shadow: var(--shadow);
 }
+.hero-photo img { width: 100%; display: block; }
 
-/* фон-шейдер на весь сайт, под контентом */
-#bgShader {
-  position: fixed;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  z-index: -1;
-  display: block;
-}
-
-.hero-inner {
-  position: relative;
-  z-index: 1;
-  text-align: center;
-}
-
-/* водяные блики поверх текста хиро */
+/* водяные блики поверх фото */
 #waterFx {
   position: absolute;
   inset: 0;
@@ -295,92 +287,12 @@ a { color: inherit; }
   pointer-events: none;
 }
 
-.hero-eyebrow {
-  font-size: .74rem;
-  letter-spacing: .32em;
-  text-transform: uppercase;
-  color: var(--accent);
-  margin-bottom: 2.2rem;
-}
-
-.hero-title {
-  font-size: clamp(3rem, 11vw, 9.5rem);
-  font-weight: 380;
-  letter-spacing: -.025em;
-  line-height: .98;
-  text-transform: uppercase;
-  margin-bottom: 3rem;
-}
-.hero-title .line { display: block; overflow: hidden; padding-bottom: .04em; }
-.line-in { display: inline-block; }
-.hero-title em {
-  font-style: italic;
-  font-weight: 340;
-  text-transform: lowercase;
-  color: var(--accent);
-}
-
-.hero-cta {
-  display: inline-flex;
-  align-items: center;
-  gap: 1rem;
-  font: 500 .82rem/1 var(--sans);
-  letter-spacing: .14em;
-  text-transform: uppercase;
-  text-decoration: none;
-  padding: .55rem .55rem .55rem 2rem;
-  border-radius: 3rem;
-  background: var(--ink);
-  color: var(--bg);
-  box-shadow: 0 12px 36px rgba(25, 40, 44, .22);
-  transition: background .35s var(--ease), box-shadow .35s var(--ease);
-  will-change: transform; /* transform двигает магнитный JS */
-}
-.hero-cta .cta-ic {
-  display: grid;
-  place-items: center;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background: var(--accent);
-  color: #fff;
-  transition: transform .35s var(--ease), background .35s var(--ease);
-}
-.hero-cta:hover {
-  background: var(--accent);
-  box-shadow: 0 18px 46px rgba(25, 40, 44, .3);
-}
-.hero-cta:hover .cta-ic {
-  background: var(--ink);
-  transform: translateY(3px);
-}
-
-.hero-scroll {
-  position: absolute;
-  bottom: 1.8rem;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 1;
-}
-.hero-scroll i {
-  width: 1px;
-  height: 42px;
-  background: var(--ink-soft);
-  animation: scrollLine 2s var(--ease) infinite;
-  transform-origin: top;
-}
-@keyframes scrollLine {
-  0% { transform: scaleY(0); transform-origin: top; }
-  45% { transform: scaleY(1); transform-origin: top; }
-  55% { transform: scaleY(1); transform-origin: bottom; }
-  100% { transform: scaleY(0); transform-origin: bottom; }
-}
-
 /* ============================================================
    БЕГУЩАЯ СТРОКА
    ============================================================ */
 .marquee {
   position: relative;
+  margin-top: clamp(1.8rem, 4vw, 3rem);
   border-top: 1px solid var(--ink);
   border-bottom: 1px solid var(--ink);
   padding: 1.15rem 0;
@@ -417,11 +329,11 @@ a { color: inherit; }
 .section {
   max-width: 1280px;
   margin: 0 auto;
-  padding: clamp(4rem, 9vw, 7.5rem) clamp(1.2rem, 4vw, 3rem);
+  padding: clamp(4rem, 9vw, 7rem) clamp(1.2rem, 4vw, 3rem);
 }
 
 .giant {
-  font-size: clamp(2.6rem, 7.5vw, 6rem);
+  font-size: clamp(2.4rem, 6.5vw, 5rem);
   font-weight: 380;
   letter-spacing: -.02em;
   text-transform: uppercase;
@@ -441,32 +353,11 @@ a { color: inherit; }
   align-items: flex-end;
   justify-content: space-between;
   gap: 1.2rem 2rem;
-  margin-bottom: clamp(2.5rem, 5vw, 4.5rem);
+  margin-bottom: clamp(2.5rem, 5vw, 4rem);
 }
-
-/* Фильтры */
-.filters { display: flex; flex-wrap: wrap; gap: .4rem; }
-.filter {
-  padding: .55rem 1.2rem;
-  border: 1px solid var(--line);
-  border-radius: 2rem;
-  /* полупрозрачная «пилюля», чтобы не сливаться с живым фоном;
-     var(--surface) сам меняется в тёмной теме */
-  background: var(--surface);
-  background: color-mix(in srgb, var(--surface) 82%, transparent);
-  backdrop-filter: blur(8px);
-  font: 500 .74rem/1 var(--sans);
-  letter-spacing: .08em;
-  text-transform: uppercase;
-  color: var(--ink-soft);
-  cursor: pointer;
-  transition: all .25s var(--ease);
-}
-.filter:hover { border-color: var(--ink); color: var(--ink); }
-.filter.active { background: var(--ink); border-color: var(--ink); color: var(--bg); }
 
 /* ============================================================
-   СЕТКА РАБОТ — ровная, все работы одного размера
+   СЕТКА РАБОТ
    ============================================================ */
 .grid {
   display: grid;
@@ -509,6 +400,7 @@ a { color: inherit; }
   font-size: .62rem;
   letter-spacing: .16em;
   text-transform: uppercase;
+  z-index: 1;
 }
 .card-badge.unique { background: var(--accent); color: #fff; }
 
@@ -534,8 +426,7 @@ a { color: inherit; }
 .card-price.sold { color: var(--ink-soft); font-weight: 400; font-style: italic; }
 
 /* ============================================================
-   ВАРИАНТ «МАГНИТНАЯ КАРУСЕЛЬ» — активен только при
-   <body class="carousel-mode"> (третья версия сайта)
+   ВАРИАНТ «МАГНИТНАЯ КАРУСЕЛЬ» (включается <body class="carousel-mode">)
    ============================================================ */
 .carousel-mode .grid {
   display: flex;
@@ -548,7 +439,6 @@ a { color: inherit; }
   -webkit-overflow-scrolling: touch;
   user-select: none;
 }
-/* браузер не должен «выхватывать» картинку при перетаскивании ленты */
 .carousel-mode .card-img img { -webkit-user-drag: none; user-drag: none; }
 .carousel-mode .grid::-webkit-scrollbar { display: none; }
 .carousel-mode .grid.dragging { cursor: grabbing; scroll-snap-type: none; }
@@ -561,12 +451,24 @@ a { color: inherit; }
 .car-nav { display: flex; gap: .6rem; }
 
 /* ============================================================
-   О ХУДОЖНИЦЕ
+   ПРИНТЫ (скоро)
+   ============================================================ */
+.section-prints { text-align: center; border-top: 1px solid var(--line); }
+.prints-soon {
+  margin-top: 1.4rem;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(1.1rem, 2vw, 1.4rem);
+  color: var(--ink-soft);
+}
+
+/* ============================================================
+   ОБО МНЕ
    ============================================================ */
 .section-about { border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
 .about-inner {
   display: grid;
-  grid-template-columns: minmax(220px, 360px) 1fr;
+  grid-template-columns: minmax(240px, 400px) 1fr;
   gap: clamp(2rem, 6vw, 5rem);
   align-items: center;
 }
@@ -586,14 +488,21 @@ a { color: inherit; }
   color: var(--accent);
   margin-bottom: 1.4rem;
 }
-.about-lead {
+.about-greeting {
   font-family: var(--serif);
-  font-size: clamp(1.3rem, 2.4vw, 1.9rem);
-  font-weight: 380;
-  line-height: 1.4;
-  max-width: 44rem;
+  font-size: clamp(1.5rem, 2.8vw, 2.2rem);
+  font-weight: 400;
+  font-style: italic;
+  line-height: 1.3;
+  margin-bottom: 1.2rem;
 }
-.about-city { margin-top: 1.4rem; font-style: italic; color: var(--ink-soft); }
+.about-body p {
+  font-size: .98rem;
+  color: var(--ink-soft);
+  max-width: 46rem;
+  margin-bottom: .9rem;
+}
+.about-city { margin-top: 1.2rem; font-style: italic; color: var(--ink-soft); }
 
 /* ============================================================
    КАК ЗАКАЗАТЬ
@@ -620,9 +529,9 @@ a { color: inherit; }
 /* ============================================================
    КОНТАКТЫ И ПОДВАЛ
    ============================================================ */
-.section-contacts { text-align: left; }
-.contacts-lead { color: var(--ink-soft); margin: 1.2rem 0 2.4rem; max-width: 30rem; }
-.contact-links { display: flex; gap: 1rem; }
+.section-contacts { text-align: center; border-top: 1px solid var(--line); }
+.contacts-lead { color: var(--ink-soft); margin: 1.2rem auto 2.2rem; max-width: 34rem; }
+.contact-links { display: flex; justify-content: center; gap: 1rem; }
 .contact-links .soc {
   display: grid;
   place-items: center;
@@ -641,6 +550,18 @@ a { color: inherit; }
   transform: translateY(-4px);
   box-shadow: 0 12px 28px rgba(20, 30, 33, .2);
 }
+.contacts-email {
+  margin-top: 1.8rem;
+  font-size: .95rem;
+  color: var(--ink-soft);
+}
+.contacts-email a {
+  color: var(--ink);
+  text-decoration-color: var(--accent);
+  text-underline-offset: 4px;
+  transition: color .25s;
+}
+.contacts-email a:hover { color: var(--accent); }
 
 .footer {
   border-top: 1px solid var(--line);
@@ -651,7 +572,7 @@ a { color: inherit; }
 }
 
 /* ============================================================
-   МОДАЛЬНОЕ ОКНО ТОВАРА
+   МОДАЛЬНОЕ ОКНО РАБОТЫ
    ============================================================ */
 .modal-overlay {
   position: fixed;
@@ -680,7 +601,7 @@ a { color: inherit; }
 @keyframes modalIn { from { opacity: 0; transform: translateY(30px) scale(.98); } }
 
 .modal-img { background: var(--bg-soft); }
-.modal-img img { width: 100%; height: 100%; object-fit: cover; }
+.modal-img img { width: 100%; height: 100%; object-fit: contain; }
 .modal-info {
   padding: clamp(1.5rem, 4vw, 2.8rem);
   overflow-y: auto;
@@ -855,51 +776,22 @@ a { color: inherit; }
 /* ============================================================
    АДАПТИВ
    ============================================================ */
-@media (max-width: 1020px) {
-  .switchers-desktop { display: none; }
-  .switchers-mobile { display: flex; padding: 1rem 1.5rem; }
-
-  .nav {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
-    flex-direction: column;
-    gap: 0;
-    background: var(--bg);
-    border-bottom: 1px solid var(--line);
-    display: none;
-  }
-  .nav.open { display: flex; }
-  .nav a { padding: 1rem 1.5rem; border-top: 1px solid var(--line); }
-  .nav a::after { display: none; }
-
-  .burger {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    gap: 5px;
-    width: 40px;
-    height: 40px;
-    border: 1px solid var(--line);
-    border-radius: 50%;
-    background: transparent;
-    cursor: pointer;
-    align-items: center;
-    flex-shrink: 0;
-  }
-  .burger span { width: 15px; height: 1.5px; background: var(--ink); }
-}
-
 @media (max-width: 860px) {
   .grid { grid-template-columns: 1fr 1fr; gap: 2rem 1.2rem; }
 
+  .site-head { padding-top: 4.6rem; } /* чтобы имя не подлезало под служебные кнопки */
+  .site-nav { gap: .3rem 1.2rem; }
+
   .modal { grid-template-columns: 1fr; overflow-y: auto; }
-  .modal-img { max-height: 42vh; }
+  .modal-img { max-height: 48vh; }
+  .modal-img img { object-fit: contain; height: 100%; }
   .about-inner { grid-template-columns: 1fr; }
-  .about-portrait { max-width: 280px; }
+  .about-portrait { max-width: 300px; }
 }
 
 @media (max-width: 520px) {
   .grid { grid-template-columns: 1fr; }
+  .utilities { right: .6rem; top: .6rem; gap: .4rem; }
+  .switch { padding: .38rem .48rem; }
+  .icon-btn { width: 36px; height: 36px; }
 }
