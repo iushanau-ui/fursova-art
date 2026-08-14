@@ -50,8 +50,8 @@ const CONFIG = {
      Обновляйте курсы время от времени вручную. */
   currencies: [
     { code: "USD", symbol: "$",  rate: 1,    before: true  },
-    { code: "EUR", symbol: "€",  rate: 0.90, before: true  },
     { code: "BYN", symbol: "Br", rate: 3.30, before: false },
+    { code: "EUR", symbol: "€",  rate: 0.90, before: true  },
   ],
 };
 
@@ -119,7 +119,7 @@ const I18N = {
   en: {
     docTitle: "Elizaveta Fursova — original paintings",
     nav: { home: "Home", buy: "Buy art", prints: "Prints", about: "About", how: "How to order", contacts: "Contacts" },
-    marquee: "Original paintings — one of a kind · Signed by the artist · Worldwide shipping · ",
+    home: { cta: "View available works" },
     works: { title: "Buy art" },
     prints: { title: "Prints", soon: "Prints are coming soon — stay tuned." },
     about: { title: "About", based: "Based in" },
@@ -154,7 +154,7 @@ const I18N = {
   ru: {
     docTitle: "Елизавета Фурсова — оригинальная живопись",
     nav: { home: "Главная", buy: "Купить картину", prints: "Принты", about: "Обо мне", how: "Как заказать", contacts: "Контакты" },
-    marquee: "Оригинальные картины — в единственном экземпляре · С подписью художницы · Доставка по всему миру · ",
+    home: { cta: "Смотреть работы в продаже" },
     works: { title: "Купить картину" },
     prints: { title: "Принты", soon: "Принты скоро появятся — следите за обновлениями." },
     about: { title: "Обо мне", based: "Живу и работаю —" },
@@ -189,7 +189,7 @@ const I18N = {
   it: {
     docTitle: "Elizaveta Fursova — dipinti originali",
     nav: { home: "Home", buy: "Acquista arte", prints: "Stampe", about: "Chi sono", how: "Come ordinare", contacts: "Contatti" },
-    marquee: "Quadri originali — pezzi unici · Firmati dall'artista · Spedizione in tutto il mondo · ",
+    home: { cta: "Guarda le opere disponibili" },
     works: { title: "Acquista arte" },
     prints: { title: "Stampe", soon: "Le stampe arriveranno presto — restate sintonizzati." },
     about: { title: "Chi sono", based: "Vivo e lavoro a" },

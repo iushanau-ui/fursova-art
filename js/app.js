@@ -79,7 +79,8 @@ document.addEventListener("click", (e) => {
 /* ---------- Применение переводов ---------- */
 function applyStatic() {
   document.documentElement.lang = lang;
-  document.title = t("docTitle");
+  const pageKey = document.body.dataset.titleKey;
+  document.title = pageKey ? `${t(pageKey)} — ${L(CONFIG.artistName)}` : t("docTitle");
 
   $$("[data-i18n]").forEach((el) => (el.textContent = t(el.dataset.i18n)));
   $$("[data-i18n-ph]").forEach((el) => (el.placeholder = t(el.dataset.i18nPh)));
@@ -91,9 +92,8 @@ function applyStatic() {
     el.innerHTML = L(CONFIG.about).map((p) => `<p>${p}</p>`).join("");
   });
 
-  $("#worksCount").textContent = `(${PRODUCTS.length})`;
-
-  $("#contactLinks").innerHTML = `
+  const contactLinks = $("#contactLinks");
+  if (contactLinks) contactLinks.innerHTML = `
     <a class="soc" href="https://t.me/${CONFIG.telegram}" target="_blank" rel="noopener" aria-label="Telegram" title="Telegram">
       <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M21.94 4.6 18.7 19.9c-.24 1.08-.88 1.35-1.79.84l-4.95-3.65-2.39 2.3c-.26.26-.48.48-.99.48l.36-5.05 9.18-8.3c.4-.35-.09-.55-.62-.2L6.16 13.47l-4.88-1.53c-1.06-.33-1.08-1.06.22-1.57L20.57 3.06c.88-.33 1.65.2 1.37 1.54Z"/></svg>
     </a>
@@ -110,29 +110,25 @@ function applyStatic() {
     emailLink.textContent = CONFIG.email;
   }
 
-  $("#stepsList").innerHTML = t("how.steps")
+  const stepsList = $("#stepsList");
+  if (stepsList) stepsList.innerHTML = t("how.steps")
     .map((s, i) => `<li class="reveal" style="--d:${i * 0.12}s"><span>0${i + 1}</span><h3>${s.t}</h3><p>${s.p}</p></li>`)
     .join("");
-
-  const phrase = t("marquee").split("·").join('<i class="msep">✦</i>');
-  $("#marqueeTrack").innerHTML = `<span>${phrase.repeat(3)}</span><span>${phrase.repeat(3)}</span>`;
 }
 
 /* ---------- Галерея ---------- */
 function renderGrid() {
   const grid = $("#grid");
+  if (!grid) return; // на страницах без галереи делать нечего
   let html = PRODUCTS
     .map(
       (p, i) => `
-    <article class="card ${carouselMode ? "" : "reveal"}" style="--d:${(i % 3) * 0.1}s" data-id="${p.id}" tabindex="0" role="button" aria-label="${L(p.title)}">
+    <article class="card ${p.sold ? "is-sold" : ""} ${carouselMode ? "" : "reveal"}" style="--d:${(i % 3) * 0.1}s" data-id="${p.id}" tabindex="0" role="button" aria-label="${L(p.title)}">
       <div class="card-img">
         ${p.sold ? `<span class="card-badge">${t("card.sold")}</span>` : ""}
         <img src="${p.image}" alt="${L(p.title)}" loading="lazy">
       </div>
-      <div class="card-row">
-        <span class="card-num">${String(i + 1).padStart(2, "0")}</span>
-        <h3 class="card-title">${L(p.title)}</h3>
-      </div>
+      <h3 class="card-title">${L(p.title)}</h3>
       <p class="card-meta">${L(p.materials)} · ${p.size}</p>
       <p class="card-price ${p.sold ? "sold" : ""}">${p.sold ? t("card.soldPrice") : fmt(p.price)}</p>
     </article>`
@@ -178,6 +174,7 @@ const carouselMode = document.body.classList.contains("carousel-mode");
 function initCarousel() {
   if (!carouselMode) return;
   const grid = $("#grid");
+  if (!grid) return;
 
   if (!document.querySelector(".car-nav")) {
     const nav = document.createElement("div");
@@ -315,21 +312,49 @@ function openProduct(id) {
 }
 
 function closeModals() {
-  productModal.hidden = true;
+  if (lightbox && !lightbox.hidden) { lightbox.hidden = true; return; } // сначала закрываем зум
+  if (productModal) productModal.hidden = true;
   cartDrawer.hidden = true;
   document.body.style.overflow = "";
 }
 
-productModal.addEventListener("click", (e) => {
-  if (e.target === productModal || e.target.hasAttribute("data-close")) closeModals();
-});
+if (productModal) {
+  productModal.addEventListener("click", (e) => {
+    if (e.target === productModal || e.target.hasAttribute("data-close")) closeModals();
+  });
+
+  $("#mAdd").onclick = () => {
+    if (modalProduct) addToCart(modalProduct.id);
+    closeModals();
+    openCart();
+  };
+}
 document.addEventListener("keydown", (e) => e.key === "Escape" && closeModals());
 
-$("#mAdd").onclick = () => {
-  if (modalProduct) addToCart(modalProduct.id);
-  closeModals();
-  openCart();
-};
+/* ---------- Лайтбокс: приближение картины ---------- */
+const lightbox = $("#lightbox");
+if (lightbox && productModal) {
+  const lbImg = $("#lbImg");
+  const mImg = $("#mImg");
+  mImg.style.cursor = "zoom-in";
+  mImg.onclick = () => {
+    lbImg.src = mImg.src;
+    lbImg.alt = mImg.alt;
+    lbImg.classList.remove("zoomed");
+    lightbox.hidden = false;
+  };
+  /* клик по картине — увеличение в точке клика, повторный — обратно */
+  lbImg.onclick = (e) => {
+    e.stopPropagation();
+    const r = lbImg.getBoundingClientRect();
+    lbImg.style.transformOrigin =
+      `${(((e.clientX - r.left) / r.width) * 100).toFixed(1)}% ${(((e.clientY - r.top) / r.height) * 100).toFixed(1)}%`;
+    lbImg.classList.toggle("zoomed");
+  };
+  lightbox.addEventListener("click", (e) => {
+    if (e.target === lightbox || e.target.hasAttribute("data-close-lb")) lightbox.hidden = true;
+  });
+}
 
 /* ---------- Корзина ---------- */
 const CART_KEY = "art-site-cart";

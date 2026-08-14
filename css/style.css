@@ -260,68 +260,30 @@ a { color: inherit; }
 }
 .site-nav a:hover { color: var(--ink); }
 .site-nav a:hover::after { right: 0; }
+.site-nav a.active { color: var(--ink); }
+.site-nav a.active::after { right: 0; }
 
 /* ============================================================
-   ФОТО-ШАПКА
+   ФОТО-ШАПКА — во всю ширину экрана
    ============================================================ */
 .hero {
-  padding: clamp(1.8rem, 4vw, 3rem) clamp(1.2rem, 4vw, 3rem) 0;
+  margin-top: clamp(1.6rem, 3.5vw, 2.6rem);
 }
-
-.hero-photo {
-  position: relative;
-  max-width: 1280px;
-  margin: 0 auto;
-  overflow: hidden;
-  box-shadow: var(--shadow);
-}
-.hero-photo img { width: 100%; display: block; }
-
-/* водяные блики поверх фото */
-#waterFx {
-  position: absolute;
-  inset: 0;
+.hero-photo { position: relative; }
+.hero-photo img {
   width: 100%;
-  height: 100%;
-  z-index: 2;
-  pointer-events: none;
+  display: block;
+  max-height: 78vh;
+  object-fit: cover;
 }
 
-/* ============================================================
-   БЕГУЩАЯ СТРОКА
-   ============================================================ */
-.marquee {
-  position: relative;
-  margin-top: clamp(1.8rem, 4vw, 3rem);
-  border-top: 1px solid var(--ink);
-  border-bottom: 1px solid var(--ink);
-  padding: 1.15rem 0;
-  overflow: hidden;
-  background: var(--surface);
+.home-cta {
+  text-align: center;
+  padding: clamp(2.5rem, 6vw, 4rem) 1.2rem;
 }
-.marquee-track {
-  display: flex;
-  width: max-content;
-  animation: marquee 46s linear infinite;
-}
-.marquee-track span {
-  font-family: var(--serif);
-  font-size: 1.55rem;
-  font-style: italic;
-  font-weight: 400;
-  letter-spacing: .02em;
-  color: var(--ink);
-  white-space: nowrap;
-  padding-right: .5rem;
-}
-.marquee-track .msep {
-  font-style: normal;
-  color: var(--accent);
-  padding: 0 .55rem;
-  font-size: 1.1rem;
-  vertical-align: .15em;
-}
-@keyframes marquee { to { transform: translateX(-50%); } }
+
+/* короткие страницы: подвал не должен висеть посреди экрана */
+main { min-height: 52vh; }
 
 /* ============================================================
    СЕКЦИИ И ГИГАНТСКИЕ ЗАГОЛОВКИ
@@ -404,16 +366,19 @@ a { color: inherit; }
 }
 .card-badge.unique { background: var(--accent); color: #fff; }
 
-.card-row {
-  display: flex;
-  align-items: baseline;
-  gap: .7rem;
+/* проданные работы: дымка поверх, приглушённые цвета */
+.card.is-sold .card-img::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--bg);
+  opacity: .42;
+  pointer-events: none;
+  transition: opacity .4s var(--ease);
 }
-.card-num {
-  font-size: .7rem;
-  color: var(--accent);
-  letter-spacing: .1em;
-}
+.card.is-sold .card-img img { filter: saturate(.75); }
+.card.is-sold:hover .card-img::after { opacity: .22; } /* при наведении дымка слегка тает */
+
 .card-title {
   font-family: var(--serif);
   font-size: clamp(1.25rem, 1.8vw, 1.55rem);
@@ -751,6 +716,32 @@ a { color: inherit; }
 .drawer-form input::placeholder, .drawer-form textarea::placeholder { color: var(--ink-soft); }
 .drawer-form input:focus, .drawer-form textarea:focus { outline: none; border-color: var(--accent); }
 .drawer-hint { font-size: .74rem; color: var(--ink-soft); text-align: center; }
+
+/* ============================================================
+   ЛАЙТБОКС: приближение картины
+   ============================================================ */
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 300;
+  display: grid;
+  place-items: center;
+  background: rgba(8, 8, 8, .92);
+  animation: fadeIn .25s ease;
+  overflow: hidden;
+}
+.lightbox img {
+  max-width: 94vw;
+  max-height: 94vh;
+  object-fit: contain;
+  cursor: zoom-in;
+  transition: transform .45s var(--ease);
+}
+.lightbox img.zoomed {
+  transform: scale(2.4);
+  cursor: zoom-out;
+}
+.lightbox .modal-close { background: rgba(255, 255, 255, .12); border-color: transparent; color: #fff; }
 
 /* ============================================================
    ТОСТ
