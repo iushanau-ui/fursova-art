@@ -11,6 +11,16 @@ const $ = (sel) => document.querySelector(sel);
 const $$ = (sel) => document.querySelectorAll(sel);
 const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+/* ---------- Красивый адрес: без «/index.html» в строке браузера ---------- */
+(function () {
+  if (location.protocol === "file:") return; // при локальном просмотре ссылки нужны как есть
+  const clean = location.pathname.replace(/index\.html$/, "");
+  if (clean !== location.pathname) {
+    history.replaceState(null, "", clean + location.search + location.hash);
+  }
+  $$('a[href="index.html"]').forEach((a) => a.setAttribute("href", "./"));
+})();
+
 /* ---------- Тема (по умолчанию — светлая) ---------- */
 let theme = localStorage.getItem("art-theme") === "dark" ? "dark" : "light";
 applyTheme();
@@ -32,7 +42,7 @@ let lang = localStorage.getItem("art-lang");
 if (!LANGS.includes(lang)) lang = "en";
 
 let cur = localStorage.getItem("art-cur");
-if (!CONFIG.currencies.some((c) => c.code === cur)) cur = CONFIG.currencies[0].code;
+if (!CONFIG.currencies.some((c) => c.code === cur)) cur = "EUR"; // валюта по умолчанию
 
 const t = (path) => path.split(".").reduce((o, k) => (o || {})[k], I18N[lang]) ?? path;
 const L = (obj) => (typeof obj === "object" ? obj[lang] ?? obj.en : obj);
@@ -111,13 +121,18 @@ function applyStatic() {
     el.innerHTML = L(CONFIG.about).map((p) => `<p>${p}</p>`).join("");
   });
 
+  /* Иконки контактов — по приоритету: WhatsApp, Instagram, Telegram, почта */
   const contactLinks = $("#contactLinks");
   if (contactLinks) contactLinks.innerHTML = `
-    <a class="soc" href="https://t.me/${CONFIG.telegram}" target="_blank" rel="noopener" aria-label="Telegram" title="Telegram">
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M21.94 4.6 18.7 19.9c-.24 1.08-.88 1.35-1.79.84l-4.95-3.65-2.39 2.3c-.26.26-.48.48-.99.48l.36-5.05 9.18-8.3c.4-.35-.09-.55-.62-.2L6.16 13.47l-4.88-1.53c-1.06-.33-1.08-1.06.22-1.57L20.57 3.06c.88-.33 1.65.2 1.37 1.54Z"/></svg>
-    </a>
+    ${CONFIG.whatsapp ? `
+    <a class="soc" href="https://wa.me/${CONFIG.whatsapp}" target="_blank" rel="noopener" aria-label="WhatsApp" title="WhatsApp">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2a9.9 9.9 0 0 0-8.5 14.95L2 22l5.2-1.5A9.9 9.9 0 1 0 12.04 2Zm0 1.8a8.1 8.1 0 1 1-4.1 15.06l-.3-.17-3.1.89.9-3.02-.2-.31A8.1 8.1 0 0 1 12.04 3.8Zm-3.2 4.06c-.16 0-.42.06-.64.3-.22.24-.85.83-.85 2.02s.87 2.34.99 2.5c.12.16 1.7 2.71 4.19 3.7 2.07.81 2.49.65 2.94.61.45-.04 1.45-.59 1.66-1.17.2-.57.2-1.06.14-1.17-.06-.1-.22-.16-.46-.28-.24-.12-1.45-.72-1.67-.8-.22-.08-.39-.12-.55.12-.16.24-.63.8-.77.96-.14.16-.28.18-.52.06-.24-.12-1.03-.38-1.96-1.21-.72-.65-1.21-1.45-1.35-1.69-.14-.24-.02-.37.1-.49.11-.11.24-.28.36-.42.12-.14.16-.24.24-.4.08-.16.04-.3-.02-.42-.06-.12-.55-1.33-.75-1.82-.2-.47-.4-.41-.55-.42h-.46Z"/></svg>
+    </a>` : ""}
     <a class="soc" href="https://instagram.com/${CONFIG.instagram}" target="_blank" rel="noopener" aria-label="Instagram" title="Instagram">
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="2.5" width="19" height="19" rx="5.5"/><circle cx="12" cy="12" r="4.3"/><circle cx="17.6" cy="6.4" r="1.1" fill="currentColor" stroke="none"/></svg>
+    </a>
+    <a class="soc" href="https://t.me/${CONFIG.telegram}" target="_blank" rel="noopener" aria-label="Telegram" title="Telegram">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M21.94 4.6 18.7 19.9c-.24 1.08-.88 1.35-1.79.84l-4.95-3.65-2.39 2.3c-.26.26-.48.48-.99.48l.36-5.05 9.18-8.3c.4-.35-.09-.55-.62-.2L6.16 13.47l-4.88-1.53c-1.06-.33-1.08-1.06.22-1.57L20.57 3.06c.88-.33 1.65.2 1.37 1.54Z"/></svg>
     </a>
     <a class="soc" href="mailto:${CONFIG.email}" aria-label="E-mail" title="${CONFIG.email}">
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="4.5" width="19" height="15" rx="2.5"/><path d="m3.5 6.5 8.5 6.7 8.5-6.7"/></svg>
@@ -136,6 +151,62 @@ function applyStatic() {
 
   const payList = $("#payList");
   if (payList) payList.innerHTML = t("how.pay").map((p) => `<li>${p}</li>`).join("");
+
+  /* Запасные каналы под формой заказа: WhatsApp → Instagram → Telegram.
+     Основной путь — кнопка «Отправить заказ» (письмо уходит само).
+     WhatsApp подставляет текст заказа в сообщение сам; Instagram и
+     Telegram открывают чат, текст уже скопирован — остаётся вставить. */
+  const orderAlt = $("#orderAlt");
+  if (orderAlt) {
+    const prep = async (e) => {
+      if (!$("#orderForm").reportValidity()) { e.preventDefault(); return null; }
+      const text = orderText();
+      await copyText(text);
+      return text;
+    };
+    orderAlt.innerHTML = `
+      ${CONFIG.whatsapp ? `
+      <a class="soc soc-sm" id="altWa" href="#" target="_blank" rel="noopener" title="${t("cart.sendWa")}" aria-label="WhatsApp">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2a9.9 9.9 0 0 0-8.5 14.95L2 22l5.2-1.5A9.9 9.9 0 1 0 12.04 2Zm0 1.8a8.1 8.1 0 1 1-4.1 15.06l-.3-.17-3.1.89.9-3.02-.2-.31A8.1 8.1 0 0 1 12.04 3.8Zm-3.2 4.06c-.16 0-.42.06-.64.3-.22.24-.85.83-.85 2.02s.87 2.34.99 2.5c.12.16 1.7 2.71 4.19 3.7 2.07.81 2.49.65 2.94.61.45-.04 1.45-.59 1.66-1.17.2-.57.2-1.06.14-1.17-.06-.1-.22-.16-.46-.28-.24-.12-1.45-.72-1.67-.8-.22-.08-.39-.12-.55.12-.16.24-.63.8-.77.96-.14.16-.28.18-.52.06-.24-.12-1.03-.38-1.96-1.21-.72-.65-1.21-1.45-1.35-1.69-.14-.24-.02-.37.1-.49.11-.11.24-.28.36-.42.12-.14.16-.24.24-.4.08-.16.04-.3-.02-.42-.06-.12-.55-1.33-.75-1.82-.2-.47-.4-.41-.55-.42h-.46Z"/></svg>
+      </a>` : ""}
+      <a class="soc soc-sm" id="altIg" href="https://ig.me/m/${CONFIG.instagram}" target="_blank" rel="noopener" title="${t("cart.sendIg")}" aria-label="Instagram">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="2.5" width="19" height="19" rx="5.5"/><circle cx="12" cy="12" r="4.3"/><circle cx="17.6" cy="6.4" r="1.1" fill="currentColor" stroke="none"/></svg>
+      </a>
+      <a class="soc soc-sm" id="altTg" href="https://t.me/${CONFIG.telegram}" target="_blank" rel="noopener" title="${t("cart.sendTg")}" aria-label="Telegram">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M21.94 4.6 18.7 19.9c-.24 1.08-.88 1.35-1.79.84l-4.95-3.65-2.39 2.3c-.26.26-.48.48-.99.48l.36-5.05 9.18-8.3c.4-.35-.09-.55-.62-.2L6.16 13.47l-4.88-1.53c-1.06-.33-1.08-1.06.22-1.57L20.57 3.06c.88-.33 1.65.2 1.37 1.54Z"/></svg>
+      </a>`;
+    const wa = $("#altWa");
+    if (wa) wa.onclick = async (e) => {
+      e.preventDefault();
+      const text = await prep(e);
+      if (text) window.open(`https://wa.me/${CONFIG.whatsapp}?text=${encodeURIComponent(text)}`, "_blank");
+    };
+    const igEl = $("#altIg");
+    if (igEl) igEl.onclick = async (e) => {
+      const text = await prep(e);
+      if (text) toast(t("toast.copied"));
+    };
+    const tgEl = $("#altTg");
+    if (tgEl) tgEl.onclick = async (e) => {
+      const text = await prep(e);
+      if (text) toast(t("toast.copied"));
+    };
+  }
+
+  /* страница «Условия продажи» — блоки собираются из terms.* */
+  const termsBody = $("#termsBody");
+  if (termsBody) {
+    const fill = (s) => s
+      .replace("{email}", `<a href="mailto:${CONFIG.email}">${CONFIG.email}</a>`)
+      .replace("{telegram}", CONFIG.telegram);
+    const seller = `<p class="terms-seller">${L(CONFIG.legalName)}${CONFIG.legalUnp ? `, ${lang === "ru" ? "УНП" : "UNP"} ${CONFIG.legalUnp}` : ""}</p>`;
+    termsBody.innerHTML = [1, 2, 3, 4, 5]
+      .map((n) => {
+        const paras = t(`terms.s${n}`).map((p) => `<p>${fill(p)}</p>`).join("");
+        return `<h3>${t(`terms.s${n}t`)}</h3>${n === 1 ? seller : ""}${paras}`;
+      })
+      .join("");
+  }
 
   /* компактная шапка, появляющаяся при прокрутке вверх */
   const miniNav = $(".mini-nav");
@@ -165,7 +236,7 @@ function renderGrid() {
     .map(
       (p, i) => `
     <article class="card ${p.sold ? "is-sold" : ""} ${carouselMode ? "" : "reveal"}" style="--d:${(i % 3) * 0.1}s" data-id="${p.id}" tabindex="0" role="button" aria-label="${L(p.title)}">
-      <div class="card-img">
+      <div class="card-img ${p.contain ? "is-contain" : ""}">
         ${p.sold ? `<span class="card-badge">${t("card.sold")}</span>` : ""}
         <img src="${p.image}" alt="${L(p.title)}" loading="lazy">
       </div>
@@ -324,24 +395,59 @@ setInterval(() => {
   });
 }, 2500);
 
-/* ---------- Модальное окно работы ---------- */
+/* ---------- Модальное окно работы (с листанием ракурсов) ---------- */
 const productModal = $("#productModal");
 let modalProduct = null;
+let slides = [];      // все фото текущей работы
+let slideIdx = 0;
+
+/* можно ли приближать текущий кадр (интерьерные визуализации — нельзя) */
+function slideZoomable() {
+  if (!modalProduct) return false;
+  const src = slides[slideIdx];
+  return !(modalProduct.noZoom || []).includes(src);
+}
+
+function showSlide(i) {
+  if (!slides.length) return;
+  slideIdx = (i + slides.length) % slides.length;
+  const img = $("#mImg");
+  img.src = slides[slideIdx];
+  /* прозрачный PNG круглой работы показываем целиком, без обрезки */
+  img.classList.toggle("img-contain", slideIdx === 0 && !!modalProduct.contain);
+  const many = slides.length > 1;
+  $("#mPrev").hidden = !many;
+  $("#mNext").hidden = !many;
+  const cEl = $("#mCount");
+  cEl.hidden = !many;
+  cEl.textContent = `${slideIdx + 1} / ${slides.length}`;
+  img.style.cursor = slideZoomable() ? "zoom-in" : "default";
+  img.title = slideZoomable() ? "Click to zoom" : "";
+}
 
 function openProduct(id) {
   const p = PRODUCTS.find((x) => x.id === id);
   if (!p) return;
   modalProduct = p;
-  $("#mImg").src = p.image;
+  slides = [p.image, ...(p.extra || [])];
   $("#mImg").alt = L(p.title);
+  showSlide(0);
   $("#mCat").textContent = catLabel(p.category);
   $("#mTitle").textContent = L(p.title);
   $("#mMeta").textContent = `${L(p.materials)} · ${p.size}`;
+  /* авторская подпись — рукописным шрифтом */
+  const quote = p.quote ? L(p.quote) : "";
+  const qEl = $("#mQuote");
+  qEl.hidden = !quote;
+  qEl.textContent = quote;
   const desc = p.description ? L(p.description) : "";
   const dEl = $("#mDesc");
   dEl.hidden = !desc;
   dEl.textContent = desc;
   $("#mPrice").textContent = p.sold ? t("modal.sold") : fmt(p.price);
+  const shipEl = $("#mShip");
+  shipEl.hidden = !!p.sold;
+  shipEl.textContent = t("modal.shipping");
   const uEl = $("#mUnique");
   uEl.hidden = !p.unique || p.sold;
   uEl.textContent = t("modal.unique");
@@ -350,6 +456,17 @@ function openProduct(id) {
   addBtn.textContent = t("modal.add");
   productModal.hidden = false;
   document.body.style.overflow = "hidden";
+}
+
+/* стрелки и клавиатура */
+if (productModal) {
+  $("#mPrev").onclick = (e) => { e.stopPropagation(); showSlide(slideIdx - 1); };
+  $("#mNext").onclick = (e) => { e.stopPropagation(); showSlide(slideIdx + 1); };
+  document.addEventListener("keydown", (e) => {
+    if (productModal.hidden || slides.length < 2) return;
+    if (e.key === "ArrowLeft") showSlide(slideIdx - 1);
+    if (e.key === "ArrowRight") showSlide(slideIdx + 1);
+  });
 }
 
 function closeModals() {
@@ -377,8 +494,8 @@ const lightbox = $("#lightbox");
 if (lightbox && productModal) {
   const lbImg = $("#lbImg");
   const mImg = $("#mImg");
-  mImg.style.cursor = "zoom-in";
   mImg.onclick = () => {
+    if (!slideZoomable()) return; // интерьерные кадры не приближаем
     lbImg.src = mImg.src;
     lbImg.alt = mImg.alt;
     lbImg.classList.remove("zoomed");
@@ -532,6 +649,7 @@ function orderText() {
     ``,
     `${t("order.name")}: ${$("#fName").value.trim()}`,
     `${t("order.contact")}: ${$("#fContact").value.trim()}`,
+    $("#fCity") && $("#fCity").value.trim() ? `${t("order.city")}: ${$("#fCity").value.trim()}` : ``,
     $("#fComment").value.trim() ? `${t("order.comment")}: ${$("#fComment").value.trim()}` : ``,
   ]
     .filter((l, i, a) => !(l === "" && a[i - 1] === ""))
@@ -547,19 +665,51 @@ async function copyText(text) {
   }
 }
 
+/* «Отправить заказ»: письмо со всеми полями уходит художнице само
+   (через Web3Forms). Если ключ не задан или сервис недоступен —
+   заказ уходит готовым сообщением в WhatsApp (без системных окон). */
+function orderFallback(text) {
+  if (CONFIG.whatsapp) {
+    window.open(`https://wa.me/${CONFIG.whatsapp}?text=${encodeURIComponent(text)}`, "_blank");
+  } else {
+    location.href = `mailto:${CONFIG.email}?subject=${encodeURIComponent("Order from elizavetafursova.com")}&body=${encodeURIComponent(text)}`;
+  }
+}
+
 $("#orderForm").addEventListener("submit", async (e) => {
   e.preventDefault();
   const text = orderText();
-  const copied = await copyText(text);
-  toast(copied ? t("toast.copied") : t("toast.copyFail"));
-  window.open(`https://t.me/${CONFIG.telegram}`, "_blank");
+  if (!CONFIG.web3formsKey) { orderFallback(text); return; }
+  const btn = e.target.querySelector('[type="submit"]');
+  btn.disabled = true;
+  try {
+    const res = await fetch("https://api.web3forms.com/submit", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Accept: "application/json" },
+      body: JSON.stringify({
+        access_key: CONFIG.web3formsKey,
+        subject: "Order from elizavetafursova.com",
+        from_name: $("#fName").value.trim(),
+        name: $("#fName").value.trim(),
+        contact: $("#fContact").value.trim(),
+        city: $("#fCity") ? $("#fCity").value.trim() : "",
+        message: text,
+      }),
+    });
+    const data = await res.json();
+    if (!data.success) throw new Error(data.message || "send failed");
+    toast(t("cart.sent"));
+    cart = [];
+    saveCart();
+    renderCart();
+    e.target.reset();
+    setTimeout(closeModals, 1400);
+  } catch (err) {
+    orderFallback(text); // сервис недоступен — заказ уйдёт в WhatsApp
+  } finally {
+    btn.disabled = false;
+  }
 });
-
-$("#sendMail").onclick = () => {
-  if (!$("#orderForm").reportValidity()) return;
-  const text = orderText();
-  location.href = `mailto:${CONFIG.email}?subject=${encodeURIComponent("Order from the website")}&body=${encodeURIComponent(text)}`;
-};
 
 /* ---------- Тост ---------- */
 let toastTimer;

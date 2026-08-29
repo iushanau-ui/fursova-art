@@ -363,6 +363,9 @@ main { min-height: 52vh; }
   font-weight: 380;
   letter-spacing: -.02em;
   text-transform: uppercase;
+  /* длинные слова (напр. «КОНФИДЕНЦИАЛЬНОСТИ») не должны вылезать за экран */
+  overflow-wrap: break-word;
+  hyphens: auto;
 }
 .giant sup {
   font-family: var(--sans);
@@ -415,6 +418,14 @@ main { min-height: 52vh; }
 }
 .card:hover .card-img img { transform: scale(1.07); }
 
+/* круглые работы: прозрачный фон, картинка целиком, тень по форме круга */
+.card-img.is-contain { background: transparent; }
+.card-img.is-contain img { object-fit: contain; padding: 4%; }
+.card:hover .card-img.is-contain {
+  box-shadow: none;
+  filter: drop-shadow(0 26px 30px rgba(20, 30, 33, .3));
+}
+
 .card-badge {
   position: absolute;
   top: .8rem;
@@ -442,6 +453,10 @@ main { min-height: 52vh; }
 }
 .card.is-sold .card-img img { filter: saturate(.75); }
 .card.is-sold:hover .card-img::after { opacity: .22; } /* при наведении дымка слегка тает */
+/* у круглых работ прямоугольная дымка выглядела бы рамкой — глушим саму картинку */
+.card.is-sold .card-img.is-contain::after { display: none; }
+.card.is-sold .card-img.is-contain img { filter: saturate(.7); opacity: .62; transition: opacity .4s var(--ease); }
+.card.is-sold:hover .card-img.is-contain img { opacity: .85; }
 
 .card-title {
   font-family: var(--serif);
@@ -637,9 +652,13 @@ main { min-height: 52vh; }
 
 /* страница политики конфиденциальности */
 .policy { max-width: 46rem; }
-.policy .giant { margin-bottom: 2rem; }
+/* на юридических страницах заголовок скромнее: «КОНФИДЕНЦИАЛЬНОСТИ»
+   в максимальном кегле не помещается в колонку */
+.policy .giant { margin-bottom: 2rem; font-size: clamp(1.9rem, 4vw, 3rem); line-height: 1.12; }
 .policy h3 { font-size: 1.4rem; font-weight: 460; margin: 2.2rem 0 .8rem; }
 .policy p { color: var(--ink-soft); font-size: .95rem; margin-bottom: .9rem; }
+.policy a { color: var(--accent); text-underline-offset: 3px; }
+.terms-seller { font-size: 1.05rem !important; color: var(--ink) !important; font-weight: 500; }
 
 /* ============================================================
    МОДАЛЬНОЕ ОКНО РАБОТЫ
@@ -670,8 +689,91 @@ main { min-height: 52vh; }
 }
 @keyframes modalIn { from { opacity: 0; transform: translateY(30px) scale(.98); } }
 
-.modal-img { background: var(--bg-soft); }
+.modal-img { position: relative; background: var(--bg-soft); }
 .modal-img img { width: 100%; height: 100%; object-fit: contain; }
+/* прозрачный PNG круглой работы — с воздухом по краям */
+.modal-img img.img-contain { padding: 8%; }
+
+/* листание ракурсов */
+.gal-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 42px;
+  height: 42px;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--surface) 85%, transparent);
+  backdrop-filter: blur(6px);
+  color: var(--ink);
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  padding-bottom: 4px;
+  transition: border-color .25s, transform .25s;
+  z-index: 2;
+}
+.gal-arrow:hover { border-color: var(--accent); transform: translateY(-50%) scale(1.08); }
+.gal-prev { left: .8rem; }
+.gal-next { right: .8rem; }
+.gal-count {
+  position: absolute;
+  right: .9rem;
+  bottom: .8rem;
+  padding: .25rem .65rem;
+  border-radius: 2rem;
+  background: color-mix(in srgb, var(--surface) 85%, transparent);
+  backdrop-filter: blur(6px);
+  font-size: .72rem;
+  letter-spacing: .08em;
+  color: var(--ink-soft);
+  z-index: 2;
+}
+
+/* авторская подпись — разборчивый рукописный шрифт */
+.modal-quote {
+  font-family: "Caveat", cursive;
+  font-size: 1.28rem;
+  line-height: 1.35;
+  color: var(--ink);
+  margin-bottom: 1.4rem;
+  padding-left: .9rem;
+  border-left: 2px solid var(--accent);
+}
+
+/* доставка включена в стоимость — ненавязчивый акцент */
+.modal-price-box { display: flex; flex-direction: column; gap: .25rem; }
+.modal-shipping { font-size: .74rem; letter-spacing: .04em; color: var(--accent); }
+.modal-btns { display: flex; gap: .6rem; flex-wrap: wrap; }
+.modal-btns .btn { text-decoration: none; }
+
+/* запасные каналы связи под формой заказа */
+.order-alt-label {
+  margin-top: .9rem;
+  font-size: .74rem;
+  letter-spacing: .06em;
+  color: var(--ink-soft);
+  text-align: center;
+}
+.order-alt { display: flex; justify-content: center; gap: .55rem; margin-top: .5rem; }
+.soc-sm { width: 44px !important; height: 44px !important; }
+
+/* логотипы платёжных систем: светлая плашка, чтобы читались в обеих темах */
+.pay-logos {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1.1rem 1.5rem;
+  margin-top: 1.6rem;
+  padding: .9rem 1.2rem;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  width: fit-content;
+}
+.pay-logos img { height: 24px; width: auto; }
 .modal-info {
   padding: clamp(1.5rem, 4vw, 2.8rem);
   overflow-y: auto;
