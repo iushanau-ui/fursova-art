@@ -121,17 +121,14 @@ function applyStatic() {
     el.innerHTML = L(CONFIG.about).map((p) => `<p>${p}</p>`).join("");
   });
 
-  /* Иконки контактов — по приоритету: WhatsApp, Instagram, Telegram, почта */
+  /* Иконки контактов: Instagram, Telegram-канал, почта.
+     WhatsApp и личный Telegram — только в оформлении заказа. */
   const contactLinks = $("#contactLinks");
   if (contactLinks) contactLinks.innerHTML = `
-    ${CONFIG.whatsapp ? `
-    <a class="soc" href="https://wa.me/${CONFIG.whatsapp}" target="_blank" rel="noopener" aria-label="WhatsApp" title="WhatsApp">
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2a9.9 9.9 0 0 0-8.5 14.95L2 22l5.2-1.5A9.9 9.9 0 1 0 12.04 2Zm0 1.8a8.1 8.1 0 1 1-4.1 15.06l-.3-.17-3.1.89.9-3.02-.2-.31A8.1 8.1 0 0 1 12.04 3.8Zm-3.2 4.06c-.16 0-.42.06-.64.3-.22.24-.85.83-.85 2.02s.87 2.34.99 2.5c.12.16 1.7 2.71 4.19 3.7 2.07.81 2.49.65 2.94.61.45-.04 1.45-.59 1.66-1.17.2-.57.2-1.06.14-1.17-.06-.1-.22-.16-.46-.28-.24-.12-1.45-.72-1.67-.8-.22-.08-.39-.12-.55.12-.16.24-.63.8-.77.96-.14.16-.28.18-.52.06-.24-.12-1.03-.38-1.96-1.21-.72-.65-1.21-1.45-1.35-1.69-.14-.24-.02-.37.1-.49.11-.11.24-.28.36-.42.12-.14.16-.24.24-.4.08-.16.04-.3-.02-.42-.06-.12-.55-1.33-.75-1.82-.2-.47-.4-.41-.55-.42h-.46Z"/></svg>
-    </a>` : ""}
     <a class="soc" href="https://instagram.com/${CONFIG.instagram}" target="_blank" rel="noopener" aria-label="Instagram" title="Instagram">
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="2.5" width="19" height="19" rx="5.5"/><circle cx="12" cy="12" r="4.3"/><circle cx="17.6" cy="6.4" r="1.1" fill="currentColor" stroke="none"/></svg>
     </a>
-    <a class="soc" href="https://t.me/${CONFIG.telegram}" target="_blank" rel="noopener" aria-label="Telegram" title="Telegram">
+    <a class="soc" href="https://t.me/${CONFIG.telegramChannel || CONFIG.telegram}" target="_blank" rel="noopener" aria-label="Telegram" title="Telegram">
       <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M21.94 4.6 18.7 19.9c-.24 1.08-.88 1.35-1.79.84l-4.95-3.65-2.39 2.3c-.26.26-.48.48-.99.48l.36-5.05 9.18-8.3c.4-.35-.09-.55-.62-.2L6.16 13.47l-4.88-1.53c-1.06-.33-1.08-1.06.22-1.57L20.57 3.06c.88-.33 1.65.2 1.37 1.54Z"/></svg>
     </a>
     <a class="soc" href="mailto:${CONFIG.email}" aria-label="E-mail" title="${CONFIG.email}">

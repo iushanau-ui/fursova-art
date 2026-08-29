@@ -44,7 +44,7 @@ const CONFIG = {
   },
   email: "elifejka@gmail.com",
   telegram: "elifejka",          // личные сообщения в Telegram — сюда приходят заказы
-                                 // (арт-канал: t.me/elizafursova)
+  telegramChannel: "elizafursova", // арт-канал — показывается на странице контактов
   instagram: "lisafursovaart",   // арт-страница в Instagram
 
   /* WhatsApp — основной мессенджер в Европе. Номер в международном формате
