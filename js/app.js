@@ -176,17 +176,20 @@ function applyStatic() {
     if (wa) wa.onclick = async (e) => {
       e.preventDefault();
       const text = await prep(e);
-      if (text) window.open(`https://wa.me/${CONFIG.whatsapp}?text=${encodeURIComponent(text)}`, "_blank");
+      if (text) {
+        track("order/whatsapp", "Order via WhatsApp");
+        window.open(`https://wa.me/${CONFIG.whatsapp}?text=${encodeURIComponent(text)}`, "_blank");
+      }
     };
     const igEl = $("#altIg");
     if (igEl) igEl.onclick = async (e) => {
       const text = await prep(e);
-      if (text) toast(t("toast.copied"));
+      if (text) { track("order/instagram", "Order via Instagram"); toast(t("toast.copied")); }
     };
     const tgEl = $("#altTg");
     if (tgEl) tgEl.onclick = async (e) => {
       const text = await prep(e);
-      if (text) toast(t("toast.copied"));
+      if (text) { track("order/telegram", "Order via Telegram"); toast(t("toast.copied")); }
     };
   }
 
@@ -453,6 +456,7 @@ function openProduct(id) {
   addBtn.textContent = t("modal.add");
   productModal.hidden = false;
   document.body.style.overflow = "hidden";
+  track(`painting/${p.id}`, `Painting: ${p.title.en}`);
 }
 
 /* стрелки и клавиатура */
@@ -546,6 +550,7 @@ function addToCart(id) {
   }
   saveCart();
   toast(t("toast.added"));
+  track(`cart/${p.id}`, `Add to cart: ${p.title.en}`);
 }
 
 function updateCartBadge() {
@@ -662,10 +667,19 @@ async function copyText(text) {
   }
 }
 
+/* ---------- Статистика (GoatCounter, без cookies) ----------
+   Отправляет анонимное событие: какие картины смотрят, что кладут
+   в корзину, сколько заказов ушло. Никаких персональных данных. */
+function track(path, title) {
+  if (window.goatcounter && window.goatcounter.count)
+    window.goatcounter.count({ path, title: title || path, event: true });
+}
+
 /* «Отправить заказ»: письмо со всеми полями уходит художнице само
    (через Web3Forms). Если ключ не задан или сервис недоступен —
    заказ уходит готовым сообщением в WhatsApp (без системных окон). */
 function orderFallback(text) {
+  track("order/whatsapp-fallback", "Order via WhatsApp (fallback)");
   if (CONFIG.whatsapp) {
     window.open(`https://wa.me/${CONFIG.whatsapp}?text=${encodeURIComponent(text)}`, "_blank");
   } else {
@@ -695,6 +709,7 @@ $("#orderForm").addEventListener("submit", async (e) => {
     });
     const data = await res.json();
     if (!data.success) throw new Error(data.message || "send failed");
+    track("order/sent", "Order sent (form)");
     toast(t("cart.sent"));
     cart = [];
     saveCart();
