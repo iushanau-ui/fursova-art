@@ -910,6 +910,7 @@ main { min-height: 52vh; }
 .drawer-form { margin-top: 1.4rem; display: flex; flex-direction: column; gap: .7rem; }
 .drawer-total { font-size: 1.05rem; margin-bottom: .4rem; }
 .drawer-total strong { font-family: var(--serif); font-size: 1.3rem; }
+.cart-ship-note { font-size: .76rem; opacity: .62; line-height: 1.45; margin: -.1rem 0 .5rem; }
 .drawer-form input, .drawer-form textarea {
   padding: .85rem 1.1rem;
   border: 1px solid var(--line);

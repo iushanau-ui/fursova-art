@@ -288,9 +288,9 @@ const I18N = {
     how: {
       title: "How to order",
       steps: [
-        { t: "Choose a piece", p: "Browse the gallery and open a painting — inside you will find all photos, details and the price with shipping included." },
+        { t: "Choose a piece", p: "Browse the gallery and open a painting — inside you will find all photos, details and the price." },
         { t: "Send the order", p: "Fill in the short form in the cart — the order goes straight to the artist. Or, if it is easier, write via WhatsApp, Instagram or Telegram." },
-        { t: "Payment & delivery", p: "Within a day I confirm the order and send you a personal secure card-payment link (bePaid). After the payment I pack the work carefully and ship it worldwide with tracking — shipping is already included in the price." },
+        { t: "Payment & delivery", p: "Within a day I confirm the order and send you a personal secure card-payment link (bePaid). After the payment I pack the work carefully and ship it worldwide with tracking. Shipping is calculated separately and depends on your country — I will tell you the exact cost before payment." },
       ],
       payTitle: "Payment & shipping",
       pay: [
@@ -298,7 +298,7 @@ const I18N = {
         "For buyers in Belarus — also via the ERIP system: Sistema «Raschet» (ERIP) → E-POS service → E-POS — payment for goods and services, account number 42674-1-X, where X is your order number (we will tell you the number when confirming the order).",
         "An international bank transfer or another individually agreed method is also possible.",
         "A painting is reserved for you once the payment is confirmed; you will receive a confirmation and packing photos.",
-        "Shipping worldwide with tracking and careful packaging — already included in the price.",
+        "Shipping worldwide with tracking and careful packaging. The shipping cost is calculated separately for your country and confirmed with you before payment.",
       ],
     },
     contacts: { title: "Contacts", lead: "For commissions, collaborations or general inquiries, please get in touch." },
@@ -320,7 +320,7 @@ const I18N = {
       s3t: "Placing an order",
       s3: [
         "The catalogue on this site is an offer to buy a work. An order is placed through the form on the site, WhatsApp, Instagram, Telegram or e-mail, and the agreement is concluded once the artist confirms it.",
-        "The price of the work is shown on its page and includes worldwide shipping. The delivery time is confirmed to you before payment.",
+        "The price of the work is shown on its page and does not include shipping. The shipping cost is calculated separately depending on the destination; the exact cost and delivery time are confirmed to you before payment.",
       ],
       s4t: "Returns",
       s4: [
@@ -345,9 +345,10 @@ const I18N = {
       c2: "Your browser's local storage keeps only your interface preferences (language, currency, theme) and cart contents. This data never leaves your device, and you can clear it at any time in your browser settings.",
     },
     card: { sold: "Sold", soldPrice: "In a private collection", unique: "1 of 1" },
-    modal: { add: "Add to cart", sold: "Sold", unique: "Unique work — exists in a single copy", shipping: "Worldwide shipping included in the price" },
+    modal: { add: "Add to cart", sold: "Sold", unique: "Unique work — exists in a single copy", shipping: "Worldwide shipping — cost calculated separately" },
     cart: {
       title: "Cart", empty: "Your cart is empty", total: "Total:",
+      shipNote: "Shipping is not included — it is calculated separately for your country and confirmed before payment.",
       name: "Your name", contact: "Telegram, phone or e-mail", city: "Country and city — to plan the delivery", comment: "Order notes (optional)",
       sendTg: "Send order via Telegram", sendMail: "Send by e-mail", sendWa: "Send order via WhatsApp", sendIg: "Send order via Instagram", send: "Send order", sent: "Order sent! I will get back to you within a day.", orDirect: "…or write to me directly:",
       hint: "The messenger buttons copy your order text and open the chat — just paste and send.",
@@ -372,9 +373,9 @@ const I18N = {
     how: {
       title: "Как заказать",
       steps: [
-        { t: "Выберите работу", p: "Смотрите галерею и открывайте картину — внутри все фото, детали и цена, в которую уже включена доставка." },
+        { t: "Выберите работу", p: "Смотрите галерею и открывайте картину — внутри все фото, детали и цена." },
         { t: "Отправьте заказ", p: "Заполните короткую форму в корзине — заказ сразу придёт художнице. А если удобнее — напишите в WhatsApp, Instagram или Telegram." },
-        { t: "Оплата и доставка", p: "В течение дня я подтвержу заказ и пришлю персональную защищённую ссылку на оплату картой (bePaid). После оплаты бережно упакую работу и отправлю в любую точку мира с трекингом — доставка уже включена в стоимость." },
+        { t: "Оплата и доставка", p: "В течение дня я подтвержу заказ и пришлю персональную защищённую ссылку на оплату картой (bePaid). После оплаты бережно упакую работу и отправлю в любую точку мира с трекингом. Доставка рассчитывается отдельно и зависит от страны — точную стоимость я сообщу вам до оплаты." },
       ],
       payTitle: "Оплата и доставка",
       pay: [
@@ -382,7 +383,7 @@ const I18N = {
         "Покупателям из Беларуси — также через систему «Расчёт» (ЕРИП): Система «Расчёт» (ЕРИП) → Сервис E-POS → E-POS — оплата товаров и услуг, лицевой счёт 42674-1-X, где X — номер вашего заказа (сообщим его при подтверждении заказа).",
         "Возможен международный банковский перевод или другой способ по договорённости.",
         "Картина резервируется за вами после подтверждения оплаты; вы получите подтверждение и фото упаковки.",
-        "Доставка по всему миру с трекингом и бережной упаковкой — уже включена в стоимость.",
+        "Доставка по всему миру с трекингом и бережной упаковкой. Стоимость доставки рассчитывается отдельно для вашей страны и согласовывается с вами до оплаты.",
       ],
     },
     contacts: { title: "Контакты", lead: "По вопросам заказных работ, сотрудничества и любым другим — напишите мне." },
@@ -404,7 +405,7 @@ const I18N = {
       s3t: "Оформление заказа",
       s3: [
         "Каталог на сайте — предложение приобрести работу. Заказ оформляется через форму на сайте, WhatsApp, Instagram, Telegram или электронную почту; договор считается заключённым с момента подтверждения заказа художницей.",
-        "Цена работы указана на её странице и включает доставку по всему миру. Срок доставки сообщается вам до оплаты.",
+        "Цена работы указана на её странице и не включает доставку. Стоимость доставки рассчитывается отдельно и зависит от страны получателя; точная стоимость и срок доставки сообщаются вам до оплаты.",
       ],
       s4t: "Возврат и обмен",
       s4: [
@@ -429,9 +430,10 @@ const I18N = {
       c2: "В локальном хранилище браузера сохраняются только ваши настройки интерфейса (язык, валюта, тема) и содержимое корзины. Эти данные не покидают ваше устройство; их можно удалить в настройках браузера в любой момент.",
     },
     card: { sold: "Продано", soldPrice: "В частной коллекции", unique: "1 из 1" },
-    modal: { add: "В корзину", sold: "Продано", unique: "Уникальная работа — существует в единственном экземпляре", shipping: "Доставка по всему миру включена в стоимость" },
+    modal: { add: "В корзину", sold: "Продано", unique: "Уникальная работа — существует в единственном экземпляре", shipping: "Доставка по всему миру — рассчитывается отдельно" },
     cart: {
       title: "Корзина", empty: "Корзина пока пуста", total: "Итого:",
+      shipNote: "Доставка не входит в сумму — она рассчитывается отдельно для вашей страны и согласовывается до оплаты.",
       name: "Ваше имя", contact: "Telegram, телефон или e-mail", city: "Страна и город — чтобы спланировать доставку", comment: "Комментарий к заказу (необязательно)",
       sendTg: "Отправить заказ в Telegram", sendMail: "Отправить на почту", sendWa: "Отправить заказ в WhatsApp", sendIg: "Отправить заказ в Instagram", send: "Отправить заказ", sent: "Заказ отправлен! Отвечу вам в течение дня.", orDirect: "…или напишите мне напрямую:",
       hint: "Кнопки мессенджеров копируют текст заказа и открывают чат — просто вставьте и отправьте.",
@@ -456,9 +458,9 @@ const I18N = {
     how: {
       title: "Come ordinare",
       steps: [
-        { t: "Scegli un'opera", p: "Sfoglia la galleria e apri un quadro: all'interno trovi tutte le foto, i dettagli e il prezzo con la spedizione già inclusa." },
+        { t: "Scegli un'opera", p: "Sfoglia la galleria e apri un quadro: all'interno trovi tutte le foto, i dettagli e il prezzo." },
         { t: "Invia l'ordine", p: "Compila il breve modulo nel carrello — l'ordine arriva direttamente all'artista. Oppure, se preferisci, scrivi via WhatsApp, Instagram o Telegram." },
-        { t: "Pagamento e consegna", p: "Entro un giorno confermo l'ordine e ti invio un link personale e sicuro per il pagamento con carta (bePaid). Dopo il pagamento imballo l'opera con cura e la spedisco in tutto il mondo con tracciamento — la spedizione è già inclusa nel prezzo." },
+        { t: "Pagamento e consegna", p: "Entro un giorno confermo l'ordine e ti invio un link personale e sicuro per il pagamento con carta (bePaid). Dopo il pagamento imballo l'opera con cura e la spedisco in tutto il mondo con tracciamento. La spedizione viene calcolata a parte e dipende dal paese di destinazione — ti comunico il costo esatto prima del pagamento." },
       ],
       payTitle: "Pagamento e spedizione",
       pay: [
@@ -466,7 +468,7 @@ const I18N = {
         "Per gli acquirenti in Bielorussia — anche tramite il sistema ERIP: Sistema «Raschet» (ERIP) → servizio E-POS → E-POS — pagamento di beni e servizi, conto 42674-1-X, dove X è il numero del vostro ordine (ve lo comunichiamo alla conferma).",
         "È possibile anche un bonifico bancario internazionale o un altro metodo concordato individualmente.",
         "Il quadro viene riservato dopo la conferma del pagamento; riceverete conferma e foto dell'imballaggio.",
-        "Spedizione in tutto il mondo con tracciamento e imballaggio accurato — già inclusa nel prezzo.",
+        "Spedizione in tutto il mondo con tracciamento e imballaggio accurato. Il costo della spedizione viene calcolato a parte per il tuo paese e concordato con te prima del pagamento.",
       ],
     },
     contacts: { title: "Contatti", lead: "Per commissioni, collaborazioni o altre richieste, non esitate a contattarmi." },
@@ -488,7 +490,7 @@ const I18N = {
       s3t: "Come ordinare",
       s3: [
         "Il catalogo del sito è una proposta di acquisto. L'ordine si effettua tramite il modulo del sito, WhatsApp, Instagram, Telegram o e-mail e il contratto si intende concluso quando l'artista lo conferma.",
-        "Il prezzo dell'opera è indicato nella sua pagina e include la spedizione in tutto il mondo. I tempi di consegna vengono comunicati prima del pagamento.",
+        "Il prezzo dell'opera è indicato nella sua pagina e non include la spedizione. Il costo di spedizione viene calcolato a parte in base al paese di destinazione; il costo esatto e i tempi di consegna vengono comunicati prima del pagamento.",
       ],
       s4t: "Diritto di recesso",
       s4: [
@@ -513,9 +515,10 @@ const I18N = {
       c2: "La memoria locale del browser conserva solo le preferenze dell'interfaccia (lingua, valuta, tema) e il contenuto del carrello. Questi dati non lasciano mai il vostro dispositivo e possono essere cancellati in qualsiasi momento dalle impostazioni del browser.",
     },
     card: { sold: "Venduto", soldPrice: "In collezione privata", unique: "1 di 1" },
-    modal: { add: "Aggiungi al carrello", sold: "Venduto", unique: "Opera unica — esiste in un solo esemplare", shipping: "Spedizione in tutto il mondo inclusa nel prezzo" },
+    modal: { add: "Aggiungi al carrello", sold: "Venduto", unique: "Opera unica — esiste in un solo esemplare", shipping: "Spedizione in tutto il mondo — costo calcolato a parte" },
     cart: {
       title: "Carrello", empty: "Il carrello è vuoto", total: "Totale:",
+      shipNote: "La spedizione non è inclusa nel totale — viene calcolata a parte per il tuo paese e concordata prima del pagamento.",
       name: "Il tuo nome", contact: "Telegram, telefono o e-mail", city: "Paese e città — per organizzare la consegna", comment: "Note sull'ordine (facoltativo)",
       sendTg: "Invia l'ordine su Telegram", sendMail: "Invia per e-mail", sendWa: "Invia l'ordine su WhatsApp", sendIg: "Invia l'ordine su Instagram", send: "Invia l'ordine", sent: "Ordine inviato! Vi risponderò entro un giorno.", orDirect: "…oppure scrivetemi direttamente:",
       hint: "I pulsanti dei messenger copiano il testo dell'ordine e aprono la chat — incolla e invia.",
