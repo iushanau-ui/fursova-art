@@ -81,6 +81,7 @@ const CONFIG = {
    ============================================================ */
 const CATEGORIES = [
   { id: "painting", label: { en: "Painting", ru: "Живопись", it: "Pittura" } },
+  { id: "seashell", label: { en: "Seashell", ru: "Ракушка", it: "Conchiglia" } },
 ];
 
 /* Материалы — чтобы не повторять переводы в каждой работе */
@@ -89,6 +90,7 @@ const MAT = {
   acrylic: { en: "Acrylic on canvas",               ru: "Холст, акрил",          it: "Acrilico su tela" },
   gold:    { en: "Acrylic on canvas, gold leaf",    ru: "Холст, акрил, поталь",  it: "Acrilico su tela, foglia d'oro" },
   watercolor: { en: "Watercolour on paper",         ru: "Бумага, акварель",      it: "Acquerello su carta" },
+  shell:   { en: "Hand-painted natural seashell",   ru: "Натуральная ракушка, ручная роспись", it: "Conchiglia naturale dipinta a mano" },
 };
 
 /* ============================================================
@@ -102,6 +104,7 @@ const MAT = {
    quote — авторская подпись-описание в карточке.
    ============================================================ */
 const W = "images/works/";
+const S = "images/shells/";
 const PRODUCTS = [
   { id: "p01", category: "painting", unique: true, price: 1500, size: "70 × 50 cm",  image: W + "01-natures-vitiligo.jpg",
     extra: [W + "01-natures-vitiligo_2.jpg", W + "01-natures-vitiligo_3.jpg", W + "01-natures-vitiligo_4.jpg"],
@@ -273,6 +276,44 @@ const PRODUCTS = [
       en: "I will let you shine even brighter by my side. I will never betray your light.",
       ru: "Рядом со мной ты будешь сиять ещё ярче. Я никогда не предам твой свет.",
       it: "Accanto a me brillerai ancora più forte. Non tradirò mai la tua luce." } },
+
+  /* ---------- Украшения: расписанные ракушки (страница Seashell) ---------- */
+  { id: "s01", category: "seashell", unique: true, price: 50, size: "", image: S + "sh01.jpg",
+    extra: [S + "sh01_2.jpg"],
+    title: { en: "Seashell No. 1", ru: "Ракушка № 1", it: "Conchiglia n. 1" }, materials: MAT.shell, sold: false },
+  { id: "s02", category: "seashell", unique: true, price: 50, size: "", image: S + "sh02.jpg",
+    extra: [S + "sh02_2.jpg"],
+    title: { en: "Seashell No. 2", ru: "Ракушка № 2", it: "Conchiglia n. 2" }, materials: MAT.shell, sold: false },
+  { id: "s03", category: "seashell", unique: true, price: 50, size: "", image: S + "sh03.jpg",
+    extra: [S + "sh03_2.jpg"],
+    title: { en: "Seashell No. 3", ru: "Ракушка № 3", it: "Conchiglia n. 3" }, materials: MAT.shell, sold: false },
+  { id: "s04", category: "seashell", unique: true, price: 50, size: "", image: S + "sh04.jpg",
+    extra: [S + "sh04_2.jpg"],
+    title: { en: "Seashell No. 4", ru: "Ракушка № 4", it: "Conchiglia n. 4" }, materials: MAT.shell, sold: false },
+  { id: "s05", category: "seashell", unique: true, price: 50, size: "", image: S + "sh05.jpg",
+    extra: [S + "sh05_2.jpg"],
+    title: { en: "Seashell No. 5", ru: "Ракушка № 5", it: "Conchiglia n. 5" }, materials: MAT.shell, sold: false },
+  { id: "s06", category: "seashell", unique: true, price: 50, size: "", image: S + "sh06.jpg",
+    extra: [S + "sh06_2.jpg"],
+    title: { en: "Seashell No. 6", ru: "Ракушка № 6", it: "Conchiglia n. 6" }, materials: MAT.shell, sold: false },
+  { id: "s07", category: "seashell", unique: true, price: 50, size: "", image: S + "sh07.jpg",
+    extra: [S + "sh07_2.jpg"],
+    title: { en: "Seashell No. 7", ru: "Ракушка № 7", it: "Conchiglia n. 7" }, materials: MAT.shell, sold: false },
+  { id: "s08", category: "seashell", unique: true, price: 50, size: "", image: S + "sh08.jpg",
+    extra: [S + "sh08_2.jpg"],
+    title: { en: "Seashell No. 8", ru: "Ракушка № 8", it: "Conchiglia n. 8" }, materials: MAT.shell, sold: false },
+  { id: "s09", category: "seashell", unique: true, price: 50, size: "", image: S + "sh09.jpg",
+    extra: [S + "sh09_2.jpg"],
+    title: { en: "Seashell No. 9", ru: "Ракушка № 9", it: "Conchiglia n. 9" }, materials: MAT.shell, sold: false },
+  { id: "s10", category: "seashell", unique: true, price: 50, size: "", image: S + "sh10.jpg",
+    extra: [S + "sh10_2.jpg"],
+    title: { en: "Seashell No. 10", ru: "Ракушка № 10", it: "Conchiglia n. 10" }, materials: MAT.shell, sold: false },
+  { id: "s11", category: "seashell", unique: true, price: 50, size: "", image: S + "sh11.jpg",
+    extra: [S + "sh11_2.jpg"],
+    title: { en: "Seashell No. 11", ru: "Ракушка № 11", it: "Conchiglia n. 11" }, materials: MAT.shell, sold: false },
+  { id: "s12", category: "seashell", unique: true, price: 50, size: "", image: S + "sh12.jpg",
+    extra: [S + "sh12_2.jpg"],
+    title: { en: "Seashell No. 12", ru: "Ракушка № 12", it: "Conchiglia n. 12" }, materials: MAT.shell, sold: false },
 ];
 /* ============================================================
    ИНТЕРФЕЙСНЫЕ ТЕКСТЫ (меню, кнопки, подписи, корзина)
@@ -280,7 +321,11 @@ const PRODUCTS = [
 const I18N = {
   en: {
     docTitle: "Elizaveta Fursova — original paintings",
-    nav: { home: "Home", buy: "Buy art", prints: "Prints", about: "About", how: "How to order", contacts: "Contacts" },
+    nav: { home: "Home", buy: "Buy art", shells: "Seashell", prints: "Prints", about: "About", how: "How to order", contacts: "Contacts" },
+    shells: {
+      title: "Seashell",
+      lead: "Every seashell is created with tenderness and love — so you can be closer to art and to the element of water.",
+    },
     home: { cta: "View available works" },
     works: { title: "Buy art" },
     prints: { title: "Prints", soon: "Prints are coming soon — stay tuned." },
@@ -345,7 +390,7 @@ const I18N = {
       c2: "Your browser's local storage keeps only your interface preferences (language, currency, theme) and cart contents. This data never leaves your device, and you can clear it at any time in your browser settings.",
     },
     card: { sold: "Sold", soldPrice: "In a private collection", unique: "1 of 1" },
-    modal: { add: "Add to cart", sold: "Sold", unique: "Unique work — exists in a single copy", shipping: "Worldwide shipping — cost calculated separately" },
+    modal: { add: "Add to cart", sold: "Sold", unique: "Unique work — exists in a single copy", shipping: "Worldwide shipping — cost calculated separately", shippingShell: "Shipping is calculated separately · free across Belarus" },
     cart: {
       title: "Cart", empty: "Your cart is empty", total: "Total:",
       shipNote: "Shipping is not included — it is calculated separately for your country and confirmed before payment.",
@@ -365,7 +410,11 @@ const I18N = {
 
   ru: {
     docTitle: "Елизавета Фурсова — оригинальная живопись",
-    nav: { home: "Главная", buy: "Купить картину", prints: "Принты", about: "Обо мне", how: "Как заказать", contacts: "Контакты" },
+    nav: { home: "Главная", buy: "Купить картину", shells: "Seashell", prints: "Принты", about: "Обо мне", how: "Как заказать", contacts: "Контакты" },
+    shells: {
+      title: "Seashell",
+      lead: "Каждая ракушка создаётся с трепетом и любовью — чтобы вы смогли быть ближе к искусству и водной стихии.",
+    },
     home: { cta: "Смотреть работы в продаже" },
     works: { title: "Купить картину" },
     prints: { title: "Принты", soon: "Принты скоро появятся — следите за обновлениями." },
@@ -430,7 +479,7 @@ const I18N = {
       c2: "В локальном хранилище браузера сохраняются только ваши настройки интерфейса (язык, валюта, тема) и содержимое корзины. Эти данные не покидают ваше устройство; их можно удалить в настройках браузера в любой момент.",
     },
     card: { sold: "Продано", soldPrice: "В частной коллекции", unique: "1 из 1" },
-    modal: { add: "В корзину", sold: "Продано", unique: "Уникальная работа — существует в единственном экземпляре", shipping: "Доставка по всему миру — рассчитывается отдельно" },
+    modal: { add: "В корзину", sold: "Продано", unique: "Уникальная работа — существует в единственном экземпляре", shipping: "Доставка по всему миру — рассчитывается отдельно", shippingShell: "Доставка рассчитывается отдельно · по Беларуси — бесплатно" },
     cart: {
       title: "Корзина", empty: "Корзина пока пуста", total: "Итого:",
       shipNote: "Доставка не входит в сумму — она рассчитывается отдельно для вашей страны и согласовывается до оплаты.",
@@ -450,7 +499,11 @@ const I18N = {
 
   it: {
     docTitle: "Elizaveta Fursova — dipinti originali",
-    nav: { home: "Home", buy: "Acquista arte", prints: "Stampe", about: "Chi sono", how: "Come ordinare", contacts: "Contatti" },
+    nav: { home: "Home", buy: "Acquista arte", shells: "Seashell", prints: "Stampe", about: "Chi sono", how: "Come ordinare", contacts: "Contatti" },
+    shells: {
+      title: "Seashell",
+      lead: "Ogni conchiglia è creata con trepidazione e amore — perché possiate essere più vicini all'arte e all'elemento dell'acqua.",
+    },
     home: { cta: "Guarda le opere disponibili" },
     works: { title: "Acquista arte" },
     prints: { title: "Stampe", soon: "Le stampe arriveranno presto — restate sintonizzati." },
@@ -515,7 +568,7 @@ const I18N = {
       c2: "La memoria locale del browser conserva solo le preferenze dell'interfaccia (lingua, valuta, tema) e il contenuto del carrello. Questi dati non lasciano mai il vostro dispositivo e possono essere cancellati in qualsiasi momento dalle impostazioni del browser.",
     },
     card: { sold: "Venduto", soldPrice: "In collezione privata", unique: "1 di 1" },
-    modal: { add: "Aggiungi al carrello", sold: "Venduto", unique: "Opera unica — esiste in un solo esemplare", shipping: "Spedizione in tutto il mondo — costo calcolato a parte" },
+    modal: { add: "Aggiungi al carrello", sold: "Venduto", unique: "Opera unica — esiste in un solo esemplare", shipping: "Spedizione in tutto il mondo — costo calcolato a parte", shippingShell: "Spedizione calcolata a parte · gratuita in Bielorussia" },
     cart: {
       title: "Carrello", empty: "Il carrello è vuoto", total: "Totale:",
       shipNote: "La spedizione non è inclusa nel totale — viene calcolata a parte per il tuo paese e concordata prima del pagamento.",

@@ -294,6 +294,44 @@ a { color: inherit; }
 .site-nav a.active { color: var(--ink); }
 .site-nav a.active::after { right: 0; }
 
+/* вкладка Seashell — выделена акцентным цветом и иконкой ракушки */
+.site-nav a.nav-shell {
+  color: var(--accent);
+  display: inline-flex;
+  align-items: center;
+  gap: .34rem;
+}
+.site-nav a.nav-shell:hover,
+.site-nav a.nav-shell.active { color: var(--accent); filter: saturate(1.25); }
+.site-nav a.nav-shell svg { flex-shrink: 0; margin-top: -1px; }
+
+/* вступление страницы Seashell: фото процесса росписи + подводка */
+.shell-intro {
+  display: grid;
+  grid-template-columns: minmax(220px, 360px) 1fr;
+  gap: clamp(1.4rem, 4vw, 3.4rem);
+  align-items: center;
+  margin: 0 0 3rem;
+}
+.shell-intro-img img {
+  width: 100%;
+  display: block;
+  border-radius: 3px;
+  box-shadow: 0 18px 44px rgba(0, 0, 0, .18);
+}
+.shell-intro-text {
+  font-family: "Caveat", cursive;
+  font-size: clamp(1.5rem, 2.7vw, 2.15rem);
+  line-height: 1.35;
+  color: var(--ink);
+  max-width: 28ch;
+}
+@media (max-width: 720px) {
+  .shell-intro { grid-template-columns: 1fr; }
+  .shell-intro-img { max-width: 320px; }
+  .shell-intro-text { max-width: none; }
+}
+
 /* компактная шапка: появляется при прокрутке ВВЕРХ */
 .mini-head {
   position: fixed;

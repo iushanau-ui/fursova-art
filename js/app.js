@@ -232,7 +232,11 @@ function applyStatic() {
 function renderGrid() {
   const grid = $("#grid");
   if (!grid) return; // на страницах без галереи делать нечего
+  /* data-category на #grid ограничивает страницу одной категорией
+     (buy-art — живопись, seashell — ракушки) */
+  const cat = grid.dataset.category;
   let html = PRODUCTS
+    .filter((p) => !cat || p.category === cat)
     .map(
       (p, i) => `
     <article class="card ${p.sold ? "is-sold" : ""} ${carouselMode ? "" : "reveal"}" style="--d:${(i % 3) * 0.1}s" data-id="${p.id}" tabindex="0" role="button" aria-label="${L(p.title)}">
@@ -241,7 +245,7 @@ function renderGrid() {
         <img src="${p.image}" alt="${L(p.title)}" loading="lazy">
       </div>
       <h3 class="card-title">${L(p.title)}</h3>
-      <p class="card-meta">${L(p.materials)} · ${p.size}</p>
+      <p class="card-meta">${[L(p.materials), p.size].filter(Boolean).join(" · ")}</p>
       <p class="card-price ${p.sold ? "sold" : ""}">${p.sold ? t("card.soldPrice") : fmt(p.price)}</p>
     </article>`
     )
@@ -434,7 +438,7 @@ function openProduct(id) {
   showSlide(0);
   $("#mCat").textContent = catLabel(p.category);
   $("#mTitle").textContent = L(p.title);
-  $("#mMeta").textContent = `${L(p.materials)} · ${p.size}`;
+  $("#mMeta").textContent = [L(p.materials), p.size].filter(Boolean).join(" · ");
   /* авторская подпись — рукописным шрифтом */
   const quote = p.quote ? L(p.quote) : "";
   const qEl = $("#mQuote");
@@ -447,7 +451,8 @@ function openProduct(id) {
   $("#mPrice").textContent = p.sold ? t("modal.sold") : fmt(p.price);
   const shipEl = $("#mShip");
   shipEl.hidden = !!p.sold;
-  shipEl.textContent = t("modal.shipping");
+  /* у ракушек своя приписка: доставка отдельно, по Беларуси бесплатно */
+  shipEl.textContent = t(p.category === "seashell" ? "modal.shippingShell" : "modal.shipping");
   const uEl = $("#mUnique");
   uEl.hidden = !p.unique || p.sold;
   uEl.textContent = t("modal.unique");
@@ -456,7 +461,7 @@ function openProduct(id) {
   addBtn.textContent = t("modal.add");
   productModal.hidden = false;
   document.body.style.overflow = "hidden";
-  track(`painting/${p.id}`, `Painting: ${p.title.en}`);
+  track(`${p.category}/${p.id}`, `${p.category === "seashell" ? "Seashell" : "Painting"}: ${p.title.en}`);
 }
 
 /* стрелки и клавиатура */
