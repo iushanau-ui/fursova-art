@@ -727,8 +727,10 @@ main { min-height: 52vh; }
 }
 @keyframes modalIn { from { opacity: 0; transform: translateY(30px) scale(.98); } }
 
-.modal-img { position: relative; background: var(--bg-soft); }
-.modal-img img { width: 100%; height: 100%; object-fit: contain; }
+/* рамка фото фиксированной пропорции: вытянутые кадры (ракушки 9:16)
+   вписываются целиком и не раздувают модалку выше экрана */
+.modal-img { position: relative; background: var(--bg-soft); aspect-ratio: 3 / 4; }
+.modal-img img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }
 /* прозрачный PNG круглой работы — с воздухом по краям */
 .modal-img img.img-contain { padding: 8%; }
 

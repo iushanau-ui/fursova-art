@@ -286,7 +286,7 @@ const PRODUCTS = [
     title: { en: "Seashell No. 2", ru: "Ракушка № 2", it: "Conchiglia n. 2" }, materials: MAT.shell, sold: false },
   { id: "s03", category: "seashell", unique: true, price: 50, size: "", image: S + "sh03.jpg",
     extra: [S + "sh03_2.jpg"],
-    title: { en: "Seashell No. 3", ru: "Ракушка № 3", it: "Conchiglia n. 3" }, materials: MAT.shell, sold: false },
+    title: { en: "Seashell No. 3", ru: "Ракушка № 3", it: "Conchiglia n. 3" }, materials: MAT.shell, sold: true },
   { id: "s04", category: "seashell", unique: true, price: 50, size: "", image: S + "sh04.jpg",
     extra: [S + "sh04_2.jpg"],
     title: { en: "Seashell No. 4", ru: "Ракушка № 4", it: "Conchiglia n. 4" }, materials: MAT.shell, sold: false },
