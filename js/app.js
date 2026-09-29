@@ -419,6 +419,8 @@ function showSlide(i) {
   img.src = slides[slideIdx];
   /* прозрачный PNG круглой работы показываем целиком, без обрезки */
   img.classList.toggle("img-contain", slideIdx === 0 && !!modalProduct.contain);
+  /* вытянутые фото ракушек заполняют рамку: лишнее сверху/снизу обрезается */
+  img.classList.toggle("img-cover", modalProduct.category === "seashell");
   const many = slides.length > 1;
   $("#mPrev").hidden = !many;
   $("#mNext").hidden = !many;

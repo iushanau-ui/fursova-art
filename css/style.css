@@ -733,6 +733,8 @@ main { min-height: 52vh; }
 .modal-img img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }
 /* прозрачный PNG круглой работы — с воздухом по краям */
 .modal-img img.img-contain { padding: 8%; }
+/* фото ракушек: рамка заполняется без полос, края кадра подрезаются */
+.modal-img img.img-cover { object-fit: cover; }
 
 /* листание ракурсов */
 .gal-arrow {
