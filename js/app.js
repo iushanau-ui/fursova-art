@@ -228,6 +228,20 @@ function applyStatic() {
   }, { passive: true });
 })();
 
+/* ---------- Ракушки: сплошная нумерация ----------
+   Проданные украшения убираются с сайта, номера сдвигаются сами:
+   художнице достаточно поставить sold: true или удалить запись.
+   Слот custom (индивидуальный заказ) не нумеруется и всегда первый. */
+(function () {
+  let n = 0;
+  PRODUCTS.forEach((p) => {
+    if (p.category !== "seashell" || p.custom) return;
+    if (p.sold) { p.title = { en: "Seashell — sold", ru: "Ракушка — продана", it: "Conchiglia — venduta" }; return; }
+    n += 1;
+    p.title = { en: `Seashell No. ${n}`, ru: `Ракушка № ${n}`, it: `Conchiglia n. ${n}` };
+  });
+})();
+
 /* ---------- Галерея ---------- */
 function renderGrid() {
   const grid = $("#grid");
@@ -237,6 +251,8 @@ function renderGrid() {
   const cat = grid.dataset.category;
   let html = PRODUCTS
     .filter((p) => !cat || p.category === cat)
+    /* проданные ракушки не показываем вовсе (картины остаются с плашкой Sold) */
+    .filter((p) => !(p.category === "seashell" && p.sold))
     .map(
       (p, i) => `
     <article class="card ${p.sold ? "is-sold" : ""} ${carouselMode ? "" : "reveal"}" style="--d:${(i % 3) * 0.1}s" data-id="${p.id}" tabindex="0" role="button" aria-label="${L(p.title)}">
